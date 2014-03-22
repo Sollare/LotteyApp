@@ -18,7 +18,15 @@ public class UIDragDropItem : MonoBehaviour
 		Horizontal,
 		Vertical,
 		PressAndHold,
+        UpOnly
 	}
+
+    public enum MoveBlock
+    {
+        None,
+        UpperOnly,
+        LowerOnly
+    }
 
 	/// <summary>
 	/// What kind of restriction is applied to the drag & drop logic before dragging is made possible.
@@ -26,13 +34,19 @@ public class UIDragDropItem : MonoBehaviour
 
 	public Restriction restriction = Restriction.None;
 
+    public MoveBlock moveBlock = MoveBlock.None;
+
 	/// <summary>
 	/// Whether a copy of the item will be dragged instead of the item itself.
 	/// </summary>
 
 	public bool cloneOnDrag = false;
 
+
+
 #region Common functionality
+
+    protected Vector3 dragStartPosition;
 
 	protected Transform mTrans;
 	protected Transform mParent;
@@ -86,6 +100,12 @@ public class UIDragDropItem : MonoBehaviour
 			{
 				if (mPressTime + 1f > RealTime.time) return;
 			}
+            else if (restriction == Restriction.UpOnly)
+            {
+				Vector2 delta = UICamera.currentTouch.totalDelta;
+
+                if (delta.y < 0) return;
+            }
 		}
 
 		if (cloneOnDrag)
@@ -144,6 +164,7 @@ public class UIDragDropItem : MonoBehaviour
 		// Disable the collider so that it doesn't intercept events
 		if (mCollider != null) mCollider.enabled = false;
 
+
 		mTouchID = UICamera.currentTouchID;
 		mParent = mTrans.parent;
 		mRoot = NGUITools.FindInParents<UIRoot>(mParent);
@@ -157,6 +178,8 @@ public class UIDragDropItem : MonoBehaviour
 		Vector3 pos = mTrans.localPosition;
 		pos.z = 0f;
 		mTrans.localPosition = pos;
+
+	    dragStartPosition = pos;
 
 		// Notify the widgets that the parent has changed
 		NGUITools.MarkParentAsChanged(gameObject);
@@ -172,6 +195,21 @@ public class UIDragDropItem : MonoBehaviour
 	protected virtual void OnDragDropMove (Vector3 delta)
 	{
 		mTrans.localPosition += delta;
+
+        if (moveBlock == MoveBlock.UpperOnly)
+        {
+            if (mTrans.localPosition.y < dragStartPosition.y)
+            {
+                mTrans.localPosition = new Vector3(
+                    mTrans.localPosition.x,
+                    dragStartPosition.y,
+                    mTrans.localPosition.z);
+                //mTrans.localPosition += Vector3.up*(dragStartPosition.y - mTrans.localPosition.y);
+
+                OnDragEnd();
+                return;
+            }
+        }
 	}
 
 	/// <summary>
