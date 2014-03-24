@@ -135,8 +135,8 @@ public class UIScrollView : MonoBehaviour
 	UIPanel mPanel;
 	Plane mPlane;
 	Vector3 mLastPos;
-	bool mPressed = false;
-	Vector3 mMomentum = Vector3.zero;
+	protected bool mPressed = false;
+	protected Vector3 mMomentum = Vector3.zero;
 	float mScroll = 0f;
 	Bounds mBounds;
 	bool mCalculatedBounds = false;
