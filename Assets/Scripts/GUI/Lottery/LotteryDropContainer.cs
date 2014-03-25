@@ -29,7 +29,9 @@ public class LotteryDropContainer : MonoBehaviour
 
         _waitingForTicket = ticket;
         collider.enabled = true;
-        UICamera.currentTouch.current = this.gameObject;
+
+        if(UICamera.current != null)
+            UICamera.currentTouch.current = this.gameObject;
 
     }
 

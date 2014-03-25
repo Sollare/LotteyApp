@@ -835,7 +835,7 @@ static public class NGUITools
 	/// Finds the specified component on the game object or one of its parents.
 	/// </summary>
 
-	static public T FindInParents<T> (GameObject go) where T : Component
+	static public T FindInParents<T> (this GameObject go) where T : Component
 	{
 		if (go == null) return null;
 #if UNITY_FLASH

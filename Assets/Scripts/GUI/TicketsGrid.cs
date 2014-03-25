@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.GUI;
 using UnityEngine;
 using System.Collections;
 
 public class TicketsGrid : UIGrid
 {
     public GameObject TicketPrefab;
+    public TicketsScrollView _scrollView;
 
     private int _maxTicketViewsAmount = 3;
     
@@ -28,12 +31,45 @@ public class TicketsGrid : UIGrid
         }
     }
 
+    private List<DragDropTicket> _items = new List<DragDropTicket>();
+
+
     void Awake()
     {
         cellHeight = TicketPlaceholder.instance.localSize.y;
+
+        _scrollView.OnTicketActivated += OnTicketActivated;
+
+        TicketsController.instance.OnTicketsModelLoaded += ModelInitialized;
+        TicketsController.instance.OnTicketsAdded += TicketsAdded;
+        TicketsController.instance.OnTicketsRemoved += TicketsRemoved;
     }
 
-    private List<DragDropTicket> _items = new List<DragDropTicket>();
+    private void TicketsRemoved(IEnumerable<Ticket> tickets)
+    {
+        foreach (var ticket in tickets)
+        {
+            RemoveGridElement(ticket);
+        }
+
+        SortByTicketId();
+    }
+
+    private void TicketsAdded(IEnumerable<Ticket> tickets)
+    {
+        InsertTickets(tickets);
+    }
+
+    private void ModelInitialized(TicketData model)
+    {
+        InsertTickets(model.Tickets);
+    }
+
+
+    private void OnTicketActivated(DragDropTicket ticket)
+    {
+        RemoveGridElement(ticket);
+    }
 
     public void InsertTickets(IEnumerable<Ticket> tickets, int at = 0)
     {
@@ -41,7 +77,7 @@ public class TicketsGrid : UIGrid
 
         var containingTicketsId = _items.Select(t => t.ticketInstance.id);
 
-        var newTickets = tickets.Where(t => !containingTicketsId.Contains(t.id));
+        var newTickets = tickets.Where(t => !containingTicketsId.Contains(t.id)).OrderBy(t => t.id);
 
         int counter = 0;
         foreach (var newTicket in newTickets)
@@ -72,6 +108,16 @@ public class TicketsGrid : UIGrid
         dragNdrop.ticketInstance = ticket;
 
         _items.Add(dragNdrop);
+    }
+
+    public void RemoveGridElement(DragDropTicket ticket)
+    {
+        if (!Application.isPlaying) return;
+
+        if (_items.Remove(ticket))
+        {
+            ticket.gameObject.SetActive(false);
+        }
     }
 
     public void RemoveGridElement(Ticket ticket)
@@ -151,7 +197,7 @@ public class TicketsGrid : UIGrid
         {
                 ticket.collider.enabled = false;
 
-            ticket.name = string.Format("_Ticket{0}", ticket.ticketInstance.id);
+            ticket.name = string.Format("_Ticket({0})", ticket.ticketInstance.id.ToString("000"));
         }
 
         _items = _items.OrderBy(t => t.ticketInstance.id).ToList();

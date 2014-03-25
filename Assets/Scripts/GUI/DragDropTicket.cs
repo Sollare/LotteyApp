@@ -6,15 +6,15 @@ public class DragDropTicket : UIDragDropItem
 {
     public Ticket ticketInstance;
 
-    public event TicketReturned OnTicketReturned;
-    public event TicketActivated OnTicketActivated;
+    public event TicketViewReturned OnTicketReturned;
+    public event TicketViewActivated OnTicketActivated;
 
     protected virtual void TicketReturned(DragDropTicket ticket)
     {
         enabled = false;
         collider.enabled = true;
 
-        TicketReturned handler = OnTicketReturned;
+        TicketViewReturned handler = OnTicketReturned;
         if (handler != null) handler(ticket);
     }
     
@@ -23,10 +23,14 @@ public class DragDropTicket : UIDragDropItem
         enabled = false;
         collider.enabled = true;
 
-        Destroy(gameObject);
-
-        TicketActivated handler = OnTicketActivated;
+        TicketViewActivated handler = OnTicketActivated;
         if (handler != null) handler(ticket);
+
+        TicketsController.instance.Model.RemoveTicket(ticketInstance);
+
+        TicketsController.instance.Model.AddTicket(Ticket.NewTicket());
+        TicketsController.instance.Model.AddTicket(Ticket.NewTicket());
+        //Destroy(gameObject);
     }
 
     private TicketsScrollView _scrollView;

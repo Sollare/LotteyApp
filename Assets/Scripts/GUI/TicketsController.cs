@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.GUI;
 using UnityEngine;
 using System.Collections;
 
 public delegate void TicketsModelLoaded(TicketData model);
-public delegate void TicketsAdded(IEnumerable<Ticket> tickets);
-public delegate void TicketsRemoved(IEnumerable<Ticket> tickets);
+public delegate void TicketsAddedInModel(IEnumerable<Ticket> tickets);
+public delegate void TicketsRemovedFromModel(IEnumerable<Ticket> tickets);
 
 public class TicketsController 
 {
@@ -26,35 +27,38 @@ public class TicketsController
         }
     }
 
-    public TicketData model;
+    public TicketData Model;
 
     public event TicketsModelLoaded OnTicketsModelLoaded;
-    public event TicketsAdded OnTicketsAdded;
-    public event TicketsRemoved OnTicketsRemoved;
+    public event TicketsAddedInModel OnTicketsAdded;
+    public event TicketsRemovedFromModel OnTicketsRemoved;
 
-    public TicketActivated OnTicketActivated;
+    /// <summary>
+    /// Активация тикета на акцию. Билет еще НЕ использован
+    /// </summary>
+    public TicketViewActivated OnTicketViewActivated;
 
-    protected virtual void CallTicketActivated(DragDropTicket ticket)
+    public virtual void CallTicketActivated(DragDropTicket ticket)
     {
-        TicketActivated handler = OnTicketActivated;
+        TicketViewActivated handler = OnTicketViewActivated;
         if (handler != null) handler(ticket);
     }
 
-    protected virtual void CallTicketsModelLoaded(TicketData ticketData)
+    public virtual void CallTicketsModelLoaded(TicketData ticketData)
     {
         TicketsModelLoaded handler = OnTicketsModelLoaded;
         if (handler != null) handler(ticketData);
     }
 
-    protected virtual void CallTicketsAdded(IEnumerable<Ticket> tickets)
+    public virtual void CallTicketsAdded(IEnumerable<Ticket> tickets)
     {
-        TicketsAdded handler = OnTicketsAdded;
+        TicketsAddedInModel handler = OnTicketsAdded;
         if (handler != null) handler(tickets);
     }
 
-    protected virtual void CallTicketsRemoved(IEnumerable<Ticket> tickets)
+    public virtual void CallTicketsRemoved(IEnumerable<Ticket> tickets)
     {
-        TicketsRemoved handler = OnTicketsRemoved;
+        TicketsRemovedFromModel handler = OnTicketsRemoved;
         if (handler != null) handler(tickets);
     }
 
@@ -62,21 +66,68 @@ public class TicketsController
     {
         if (!Application.isPlaying) return;
 
-        model = new TicketData(2);
-        CallTicketsModelLoaded(model);
+        Model = new TicketData(this, 4);
+        CallTicketsModelLoaded(Model);
     }
 }
 
 [Serializable]
 public class TicketData
 {
-    public List<Ticket> tickets;
+    private TicketsController _controller;
+    private List<Ticket> _tickets;
 
-    public TicketData(int ticketsCount)
+    public IEnumerable<Ticket> Tickets
     {
-        tickets = new List<Ticket>();
+        get
+        {
+            return _tickets;
+        }
+    }
+
+    public TicketData(TicketsController controller, int ticketsCount)
+    {
+        _controller = controller;
+
+        _tickets = new List<Ticket>();
 
         for (int i = 0; i < ticketsCount; i++)
-            tickets.Add(new Ticket() { id = UnityEngine.Random.Range(1, 1000) });
+            _tickets.Add(Ticket.NewTicket());
+
+        _tickets = _tickets.OrderBy(t => t.id).ToList();
+
+        _controller.CallTicketsModelLoaded(this);
+    }
+    
+    public bool RemoveTicket(Ticket ticket)
+    {
+        var t = _tickets.FirstOrDefault(tk => tk.id == ticket.id);
+
+        if (t == null) return false;
+        else
+        {
+            _tickets.RemoveAll(tk => tk.id == ticket.id);
+            _controller.CallTicketsRemoved(new List<Ticket>() { ticket });
+            return true;
+        }
+    }
+
+    public bool AddTicket(Ticket ticket)
+    {
+        var t = _tickets.FirstOrDefault(tk => tk.id == ticket.id);
+
+        if (t == null)
+        {
+            _tickets.Add(ticket);
+            _controller.CallTicketsAdded(new List<Ticket>() { ticket });
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public Ticket GetTicket(int id)
+    {
+        return _tickets.FirstOrDefault(tk => tk.id == id);
     }
 }
