@@ -66,7 +66,7 @@ public class TicketsController
     {
         if (!Application.isPlaying) return;
 
-        Model = new TicketData(this, 4);
+        Model = new TicketData(this, 5);
         CallTicketsModelLoaded(Model);
     }
 }

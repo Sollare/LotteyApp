@@ -527,6 +527,7 @@
      <Compile Include="Assets\Scripts\GUI\DragDropTicket.cs" />
      <Compile Include="Assets\Scripts\GUI\Lottery\LotteryDropContainer.cs" />
      <Compile Include="Assets\Scripts\GUI\TicketPlaceholder.cs" />
+     <Compile Include="Assets\Scripts\GUI\Tickets\BuyButton.cs" />
      <Compile Include="Assets\Scripts\GUI\TicketsController.cs" />
      <Compile Include="Assets\Scripts\GUI\TicketsGrid.cs" />
      <Compile Include="Assets\Scripts\GUI\TicketsScrollView.cs" />

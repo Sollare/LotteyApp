@@ -6,6 +6,17 @@ public class DragDropTicket : UIDragDropItem
 {
     public Ticket ticketInstance;
 
+    private UIWidget _widget;
+
+    public UIWidget Widget
+    {
+        get
+        {
+            if (_widget) return _widget;
+            else return (_widget = GetComponent<UIWidget>());
+        }
+    }
+
     public event TicketViewReturned OnTicketReturned;
     public event TicketViewActivated OnTicketActivated;
 
@@ -28,8 +39,8 @@ public class DragDropTicket : UIDragDropItem
 
         TicketsController.instance.Model.RemoveTicket(ticketInstance);
 
-        TicketsController.instance.Model.AddTicket(Ticket.NewTicket());
-        TicketsController.instance.Model.AddTicket(Ticket.NewTicket());
+        //TicketsController.instance.Model.AddTicket(Ticket.NewTicket());
+        //TicketsController.instance.Model.AddTicket(Ticket.NewTicket());
         //Destroy(gameObject);
     }
 

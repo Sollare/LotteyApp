@@ -52,31 +52,22 @@ namespace Assets.Scripts.GUI
         public void Start()
         {
             //grid.Clear();
-            RecalculateBounds();
 
-            TicketsController.instance.OnTicketsModelLoaded += ModelInitialized;   
-            TicketsController.instance.OnTicketsAdded += TicketsAdded;
-            TicketsController.instance.OnTicketsRemoved += TicketsRemoved;
+            //TicketsController.instance.OnTicketsModelLoaded += ModelInitialized;   
+            //TicketsController.instance.OnTicketsAdded += TicketsAdded;
+            //TicketsController.instance.OnTicketsRemoved += TicketsRemoved;
 
             // Контроллер билетов должен знать о том, что билет был активирован
             this.OnTicketActivated += TicketsController.instance.OnTicketViewActivated;
 
+            grid.OnGridUpdated += OnGridUpdated;
             // TODO: КОСТЫЛЬ!!!
             TicketsController.instance.Initialize();
         }
 
-        private void TicketsRemoved(IEnumerable<Ticket> tickets)
+        private void OnGridUpdated(TicketsGrid grid)
         {
-            RecalculateBounds();
-        }
-
-        private void TicketsAdded(IEnumerable<Ticket> tickets)
-        {
-            RecalculateBounds();
-        }
-
-        private void ModelInitialized(TicketData model)
-        {
+            panel.bottomAnchor.absolute = -(grid.Items.Count()) * (int)TicketPlaceholder.instance.localSize.y;
         }
 
         private Vector3 move;
@@ -130,10 +121,17 @@ namespace Assets.Scripts.GUI
         {
             base.SetDragAmount(x, y, updateScrollbars);
         }
-
-        private void RecalculateBounds()
+        
+        private void TicketsRemoved(IEnumerable<Ticket> tickets)
         {
-            panel.bottomAnchor.absolute = - (TicketsController.instance.Model.Tickets.Count()) * (int)TicketPlaceholder.instance.localSize.y;
+        }
+
+        private void TicketsAdded(IEnumerable<Ticket> tickets)
+        {
+        }
+
+        private void ModelInitialized(TicketData model)
+        {
         }
     }
 }
