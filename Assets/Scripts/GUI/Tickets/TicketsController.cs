@@ -66,7 +66,15 @@ public class TicketsController
     {
         if (!Application.isPlaying) return;
 
+        SessionController.instance.SessionStarted += OnSessionStarted;
+
         Model = new TicketData(this, 5);
+        CallTicketsModelLoaded(Model);
+    }
+
+    private void OnSessionStarted(User user)
+    {
+        Model = new TicketData(this, user.freeTickets);
         CallTicketsModelLoaded(Model);
     }
 }
@@ -83,6 +91,13 @@ public class TicketData
         {
             return _tickets;
         }
+    }
+
+    public TicketData(TicketsController controller, IEnumerable<Ticket> tickets)
+    {
+        _controller = controller;
+
+        _tickets = tickets.ToList();
     }
 
     public TicketData(TicketsController controller, int ticketsCount)

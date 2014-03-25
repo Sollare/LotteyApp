@@ -535,6 +535,7 @@
      <Compile Include="Assets\Scripts\GUI\Tickets\TicketsController.cs" />
      <Compile Include="Assets\Scripts\GUI\Tickets\TicketsGrid.cs" />
      <Compile Include="Assets\Scripts\GUI\Tickets\TicketsScrollView.cs" />
+     <Compile Include="Assets\Scripts\InstancePreloader.cs" />
      <Compile Include="Assets\Scripts\Model\TicketComparer.cs" />
      <Compile Include="Assets\Scripts\ServerModels\ResponseMessage.cs" />
      <Compile Include="Assets\Scripts\ServerModels\ViewModels\UserViewModel.cs" />

@@ -78,6 +78,8 @@ public class TicketsGrid : UIGrid
 
     private void ModelInitialized(TicketData model)
     {
+        Clear();
+
         InsertTickets(model.Tickets);
 
         GridUpdated(this);
@@ -187,21 +189,21 @@ public class TicketsGrid : UIGrid
         }
     }
 
-    //public void Clear()
-    //{
-    //    if (Application.isEditor) return;
+    public void Clear()
+    {
+        if (Application.isEditor) return;
 
-    //    for (int i = 0; i < transform.childCount; i++)
-    //    {
-    //        var child = transform.GetChild(i);
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            var child = transform.GetChild(i);
 
-    //        if (child.name == "Z(Buy)") continue;
+            if (child.name == "Z(Buy)") continue;
 
-    //        DestroyImmediate(child.gameObject);
-    //    }   
+            DestroyImmediate(child.gameObject);
+        }
 
-    //    _tickets.Clear();
-    //}
+        Items.Clear();
+    }
 
     //void Sort()
     //{
