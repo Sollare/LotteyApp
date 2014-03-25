@@ -9,7 +9,7 @@
         public DateTime expiration;
     }
 
-    public class User
+    public class UserInfo
     {
         public int id;
         public string name;
