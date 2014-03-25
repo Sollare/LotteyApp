@@ -1,52 +1,128 @@
-﻿using System.Linq;
-using UnityEditorInternal;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
-using System.Collections;
 
-public class TicketsScrollView : UIScrollView {
+namespace Assets.Scripts.GUI
+{
+    public delegate void TicketPulled(DragDropTicket ticket);
+    public delegate void TicketReturned(DragDropTicket ticket);
+    public delegate void TicketActivated(DragDropTicket ticket);
 
-	// Use this for initialization
-	void Start () {
-	
-	}
 
-    private Vector3 move;
-	
-	// Update is called once per frame
-    public override void MoveRelative(Vector3 relative)
+    public class TicketsScrollView : UIScrollView
     {
-        base.MoveRelative(relative);
+        public TicketsGrid grid;
 
-        move += relative;
-       // print(move);
+        public float PullCoefficient = 1.5f;
 
-        if (move.y > 140)
+        public event TicketPulled OnTicketPulled;
+        public event TicketActivated OnTicketActivated;
+        public event TicketReturned OnTicketReturned;
+
+        protected virtual void CallTicketPulled(DragDropTicket ticket)
         {
-            Press(false);
-            move = Vector3.zero;
+            Debug.Log("Потащили билет " + ticket.ticketInstance.id);
+
+            TicketPulled handler = OnTicketPulled;
+            if (handler != null) handler(ticket);
+        }
+        protected virtual void CallTicketReturned(DragDropTicket ticket)
+        {
+            Debug.Log("Вернули билет " + ticket.ticketInstance.id);
+
+            TicketReturned handler = OnTicketReturned;
+            if (handler != null) handler(ticket);
+        }
+        protected virtual void CallTicketActivated(DragDropTicket ticket)
+        {
+            Debug.Log("Активировали билет " + ticket.ticketInstance.id);
+
+            TicketActivated handler = OnTicketActivated;
+            if (handler != null) handler(ticket);
         }
 
+        public void Start()
+        {
+            //grid.Clear();
+            panel.bottomAnchor.absolute = -2 * (int)TicketPlaceholder.instance.localSize.y;
+
+            TicketsController.instance.OnTicketsModelLoaded += ModelInitialized;   
+            TicketsController.instance.OnTicketsAdded += TicketsAdded;
+            TicketsController.instance.OnTicketsRemoved += TicketsRemoved;
+
+            // Контроллер билетов должен знать о том, что билет был активирован
+            this.OnTicketActivated += TicketsController.instance.OnTicketActivated;
+
+            TicketsController.instance.Initialize();
+        }
+
+        private void TicketsRemoved(IEnumerable<Ticket> tickets)
+        {
         
-    }
+        }
 
-    public void OnClick()
-    {
-        print("clicked");
-    }
+        private void TicketsAdded(IEnumerable<Ticket> tickets)
+        {
 
-    public void OnPress(bool isDown)
-    {
-        Debug.Log("Released");
-    }
+        }
 
-    public override bool shouldMoveVertically
-    {
-        get { return move.y < 140; }
-    }
+        private void ModelInitialized(TicketData model)
+        {
+            //Debug.Log("Model initialized");
+            grid.InsertTickets(model.tickets);
+        }
 
-    public override void SetDragAmount(float x, float y, bool updateScrollbars)
-    {
-        base.SetDragAmount(x, y, updateScrollbars);
-print(y);
+        private Vector3 move;
+	
+        public override void MoveRelative(Vector3 relative)
+        {
+            base.MoveRelative(relative);
+
+            move += relative;
+            //print(move);
+
+            if (move.y > TicketPlaceholder.instance.localSize.y * PullCoefficient)
+            {
+                Press(false);
+
+                if (UICamera.currentTouch != null)
+                    UICamera.currentTouch.pressed = null;
+
+                move = Vector3.zero;
+
+                PullFirstTicket();
+            }
+        }
+
+        public void PullFirstTicket()
+        {
+            var firstTicket = grid.FirstTicket;
+
+            firstTicket.Pull();
+
+            firstTicket.OnTicketActivated += CallTicketActivated;
+            firstTicket.OnTicketReturned += TicketReturned;
+
+            CallTicketPulled(firstTicket);
+        }
+
+        private void TicketReturned(DragDropTicket ticket)
+        {
+            ticket.OnTicketActivated -= CallTicketActivated;
+            ticket.OnTicketReturned -= TicketReturned;
+
+            CallTicketReturned(ticket);
+        }
+
+        public override bool shouldMoveVertically
+        {
+            get { return move.y < 140; }
+        }
+
+        public override void SetDragAmount(float x, float y, bool updateScrollbars)
+        {
+            base.SetDragAmount(x, y, updateScrollbars);
+            print(y);
+        }
     }
 }

@@ -370,13 +370,13 @@ static public class NGUITools
 	/// Add a new child game object.
 	/// </summary>
 
-	static public GameObject AddChild (GameObject parent) { return AddChild(parent, true); }
+	static public GameObject AddChild (this GameObject parent) { return AddChild(parent, true); }
 
 	/// <summary>
 	/// Add a new child game object.
 	/// </summary>
 
-	static public GameObject AddChild (GameObject parent, bool undo)
+    static public GameObject AddChild(this GameObject parent, bool undo)
 	{
 		GameObject go = new GameObject();
 #if UNITY_EDITOR
@@ -398,7 +398,7 @@ static public class NGUITools
 	/// Instantiate an object and add it to the specified parent.
 	/// </summary>
 
-	static public GameObject AddChild (GameObject parent, GameObject prefab)
+    static public GameObject AddChild(this GameObject parent, GameObject prefab)
 	{
 		GameObject go = GameObject.Instantiate(prefab) as GameObject;
 

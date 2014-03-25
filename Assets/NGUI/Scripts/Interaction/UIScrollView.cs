@@ -141,7 +141,7 @@ public class UIScrollView : MonoBehaviour
 	Bounds mBounds;
 	bool mCalculatedBounds = false;
 	bool mShouldMove = false;
-	bool mIgnoreCallbacks = false;
+	protected bool mIgnoreCallbacks = false;
 	int mDragID = -10;
 	Vector2 mDragStartOffset = Vector2.zero;
 	bool mDragStarted = false;

@@ -400,7 +400,7 @@ public class UICamera : MonoBehaviour
 	/// Change the selection.
 	/// </summary>
 
-	static protected void SetSelection (GameObject go, ControlScheme scheme)
+	static public void SetSelection (GameObject go, ControlScheme scheme)
 	{
 		if (mNextSelection != null)
 		{

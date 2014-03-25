@@ -66,7 +66,7 @@ public class UIDragDropItem : MonoBehaviour
 	{
 		mTrans = transform;
 		mCollider = collider;
-		mDragScrollView = GetComponent<UIDragScrollView>();
+        mDragScrollView = GetComponent<UIDragScrollView>();
 	}
 
 	/// <summary>
@@ -106,7 +106,7 @@ public class UIDragDropItem : MonoBehaviour
 
                 if (delta.y < 0) return;
             }
-		}
+        }
 
 		if (cloneOnDrag)
 		{
@@ -136,7 +136,11 @@ public class UIDragDropItem : MonoBehaviour
 
 	void OnDrag (Vector2 delta)
 	{
+        //Debug.Log("Enabled: " + enabled + " Touch ID equal: " + (mTouchID == UICamera.currentTouchID));
+
 		if (!enabled || mTouchID != UICamera.currentTouchID) return;
+
+
 		OnDragDropMove((Vector3)delta * mRoot.pixelSizeAdjustment);
 	}
 
@@ -144,7 +148,7 @@ public class UIDragDropItem : MonoBehaviour
 	/// Notification sent when the drag event has ended.
 	/// </summary>
 
-	void OnDragEnd ()
+	protected virtual void OnDragEnd ()
 	{
 		if (!enabled || mTouchID != UICamera.currentTouchID) return;
 		OnDragDropRelease(UICamera.hoveredObject);
@@ -156,7 +160,7 @@ public class UIDragDropItem : MonoBehaviour
 	/// Perform any logic related to starting the drag & drop operation.
 	/// </summary>
 
-	protected virtual void OnDragDropStart ()
+	public virtual void OnDragDropStart ()
 	{
 		// Automatically disable the scroll view
 		if (mDragScrollView != null) mDragScrollView.enabled = false;
@@ -164,6 +168,7 @@ public class UIDragDropItem : MonoBehaviour
 		// Disable the collider so that it doesn't intercept events
 		if (mCollider != null) mCollider.enabled = false;
 
+        //Debug.Log("Drag SV: " + mDragScrollView);
 
 		mTouchID = UICamera.currentTouchID;
 		mParent = mTrans.parent;
@@ -191,9 +196,10 @@ public class UIDragDropItem : MonoBehaviour
 	/// <summary>
 	/// Adjust the dragged object's position.
 	/// </summary>
-
 	protected virtual void OnDragDropMove (Vector3 delta)
 	{
+        //Debug.Log("Move: " + delta);
+
 		mTrans.localPosition += delta;
 
         if (moveBlock == MoveBlock.UpperOnly)
@@ -206,6 +212,7 @@ public class UIDragDropItem : MonoBehaviour
                     mTrans.localPosition.z);
                 //mTrans.localPosition += Vector3.up*(dragStartPosition.y - mTrans.localPosition.y);
 
+                UICamera.currentTouch.pressed = null;
                 OnDragEnd();
                 return;
             }

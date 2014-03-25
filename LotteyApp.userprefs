@@ -1,10 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\JsonDotNet\Source\JsonConvert.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GUI\TicketsScrollView.cs">
     <Files>
-      <File FileName="Assets\NGUI\Scripts\Interaction\UIGrid.cs" Line="1" Column="1" />
-      <File FileName="Assets\NGUI\Scripts\Interaction\UIDragDropItem.cs" Line="1" Column="1" />
-      <File FileName="Assets\JsonDotNet\Source\JsonConvert.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GUI\TicketsScrollView.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
