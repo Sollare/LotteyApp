@@ -570,6 +570,7 @@ public class UIScrollView : MonoBehaviour
 	{
 		if (NGUITools.GetActive(this))
 		{
+            Debug.Log("Repositioning");
 			// Invalidate the bounds
 			mCalculatedBounds = false;
 			Vector2 pv = NGUIMath.GetPivotOffset(contentPivot);
@@ -582,14 +583,16 @@ public class UIScrollView : MonoBehaviour
 		}
 	}
 
+    public bool IgnoreUpdatePositionOnBoundChanged = true;
+
 	/// <summary>
 	/// Call this function after you adjust the scroll view's bounds if you want it to maintain the current scrolled position
 	/// </summary>
 
 	public void UpdatePosition ()
 	{
-		if (!mIgnoreCallbacks)
-		{
+		if (!mIgnoreCallbacks && !IgnoreUpdatePositionOnBoundChanged)
+        {
 			mIgnoreCallbacks = true;
 			mCalculatedBounds = false;
 			Vector2 pv = NGUIMath.GetPivotOffset(contentPivot);
