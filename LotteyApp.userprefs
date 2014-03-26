@@ -1,8 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench ActiveDocument="..\MarketClient\Assets\Editor\Scripts\TileGridEditor.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="..\MarketClient\Assets\Scripts\TiledTerrain\Editor\TileViewEditor.cs">
     <Files>
-      <File FileName="..\MarketClient\Assets\Editor\Scripts\TileGridEditor.cs" Line="1" Column="1" />
+      <File FileName="..\MarketClient\Assets\Scripts\TiledTerrain\Editor\TileViewEditor.cs" Line="58" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -10,13 +10,20 @@ public class SessionController : MonoBehaviour
     public event SessionDelegate SessionStarted;
     public event SessionDelegate SessionEnded;
 
+    public static bool isAuthorized;
+
     protected virtual void OnSessionStarted(User user)
     {
+        Debug.Log(">>> СЕССИЯ НАЧАТА <<<");
+        isAuthorized = true;
+
         SessionDelegate handler = SessionStarted;
         if (handler != null) handler(user);
     }
     protected virtual void OnSessionEnded(User user)
     {
+        isAuthorized = false;
+
         SessionDelegate handler = SessionEnded;
         if (handler != null) handler(user);
     }
@@ -77,7 +84,7 @@ public class SessionController : MonoBehaviour
     {
         if (fetchedObject == null)
         {
-            Debug.LogError("Получен неизвестный объект");
+            Debug.LogError("Получен неизвестный объект: " + error);
             return;
         }
 
@@ -123,7 +130,7 @@ public class SessionController : MonoBehaviour
         _currentUser = fetchedObject;
         Debug.Log(fetchedObject.ToString());
 
-        SessionStarted(_currentUser);
+        OnSessionStarted(_currentUser);
     }
 
     #endregion

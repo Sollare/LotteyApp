@@ -5,6 +5,15 @@ using UnityEngine;
 
 public class LotteriesScrollView : MonoBehaviour
 {
+    private static LotteriesScrollView _instance;
+    public static LotteriesScrollView instance
+    {
+        get
+        {
+            return _instance;
+        }
+    }
+
     public List<LotteryItem> items;
     private UICenterOnChild _scrollCenterOnChild;
 
@@ -29,7 +38,7 @@ public class LotteriesScrollView : MonoBehaviour
 
     protected virtual void CallItemChanged(LotteryItem data)
     {
-        Debug.Log("Item changed");
+        //Debug.Log("Item changed");
 
         DataExtensions.EventDelegate<LotteryItem> handler = OnItemChanged;
         if (handler != null) handler(data);
@@ -64,7 +73,9 @@ public class LotteriesScrollView : MonoBehaviour
     }
 
     void Awake ()
-	{
+    {
+        _instance = this;
+
 	    //items = gameObject.GetComponentsInChildren<LotteryItem>().ToList();
         _scrollCenterOnChild = GetComponent<UICenterOnChild>();
 
@@ -74,7 +85,7 @@ public class LotteriesScrollView : MonoBehaviour
 
     private void OnNewTargetToCenter(GameObject target)
     {
-        Debug.Log("New target " + target.name);
+        //Debug.Log("New target " + target.name);
 
         var lotteryItem = target.GetComponent<LotteryItem>();
 

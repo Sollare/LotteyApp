@@ -9,6 +9,7 @@
         public int totalmoney;
         public DateTime expiration;
         public LotteryType type;
+        public Bet[] MyBets;
 
         public enum LotteryType
         {
@@ -27,12 +28,6 @@
         public Ticket[] freeTickets;
         public Bet[] bets;
         public Win[] victories;
-    }
-
-    public class Bet
-    {
-        public int id;
-        public int drawingId;
     }
     
     public class FreeTicketViewModel

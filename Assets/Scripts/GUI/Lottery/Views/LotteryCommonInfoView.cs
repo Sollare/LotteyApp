@@ -7,11 +7,19 @@ public class LotteryCommonInfoView : MonoBehaviour {
     public LotteryTimer MainLotteryTimer;
     public UIWidget LotteryInfoWidget;
 
+    private static LotteryTimer _mainTimer;
+    public static LotteryTimer MainTimer
+    {
+        get { return _mainTimer; }
+    }
+
     public LotteriesScrollView LotteriesScrollView;
 
 	// Use this for initialization
-	void Awake () 
-    {
+	void Awake ()
+	{
+	    _mainTimer = MainLotteryTimer;
+
 	    LotteriesScrollView.OnItemChanged += ItemChanged;
         LotteriesScrollView.OnSelectedItemDataUpdated += OnSelectedItemDataUpdated;
 	}
@@ -28,16 +36,16 @@ public class LotteryCommonInfoView : MonoBehaviour {
 
     void UpdateHeader(LotteryItem selectedItem)
     {
-        if (selectedItem == null) return;
+        if (selectedItem == null || selectedItem.lotteryInstance == null) return;
 
-        Debug.Log("New Target: " + selectedItem.name);
+        //Debug.Log("New Target: " + selectedItem.name);
 
-        if (selectedItem.Data.type == LotteryData.LotteryType.Instant)
+        if (selectedItem.lotteryInstance.type == LotteryData.LotteryType.Instant)
             SetLotteryInfoPanelVisible(false);
         else
             SetLotteryInfoPanelVisible(true);
 
-        MainLotteryTimer.SetExpirationDate(selectedItem.Data.expiration);
+        MainLotteryTimer.SetExpirationDate(selectedItem.lotteryInstance.expiration);
         MainLotteryTimer.StartTimer();
     }
 

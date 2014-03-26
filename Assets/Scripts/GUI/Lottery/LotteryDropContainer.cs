@@ -11,6 +11,9 @@ public class LotteryDropContainer : MonoBehaviour
     // Нужен чтобы принимать события отрыва билета и т.п.
     public TicketsScrollView scrollView;
 
+    public UIPanel CoverPanel;
+    [Range(0f, 1f)]
+    public float CoverAlpha = 0.9f;
 
     private bool expanded = false;
     private DragDropTicket _waitingForTicket;
@@ -40,9 +43,10 @@ public class LotteryDropContainer : MonoBehaviour
         AbortPreparation();
     }
 
-    private void TicketActivated(DragDropTicket ticket)
+    private void TicketActivated(DragDropTicket ticket, LotteryItem item)
     {
-        AbortPreparation();
+        StopCoroutine("WaitForCursorOver");
+        //AbortPreparation();
     }
 
     void AbortPreparation()
@@ -64,12 +68,16 @@ public class LotteryDropContainer : MonoBehaviour
     void Expand()
     {
         var tweenScale = TweenScale.Begin(gameObject, Duration, new Vector3(1, HeightCoefficient, 1));
+
+        //TweenAlpha.Begin(CoverPanel.gameObject, Duration, CoverAlpha);
+
         expanded = true;
     }
 
     void Squeeze()
     {
         var tweenScale = TweenScale.Begin(gameObject, Duration, new Vector3(1, 1, 1));
+        //TweenAlpha.Begin(CoverPanel.gameObject, Duration, 0);
         expanded = false;
     }
     

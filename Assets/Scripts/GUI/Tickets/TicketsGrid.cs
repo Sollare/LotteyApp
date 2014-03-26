@@ -87,7 +87,7 @@ public class TicketsGrid : UIGrid
     }
 
 
-    private void OnTicketActivated(DragDropTicket ticket)
+    private void OnTicketActivated(DragDropTicket ticket, LotteryItem item)
     {
         RemoveGridElement(ticket);
 

@@ -14,24 +14,80 @@ public class LotteryItem : MonoBehaviour
 
     public LotteryData.LotteryType LoadLotteryOfType;
 
-    public LotteryData Data;
+    private LotteryData _lotteryInstance;
+
+    public LotteryData lotteryInstance
+    {
+        get { return _lotteryInstance; }
+        set
+        {
+            _lotteryInstance = value;
+
+            if (value != null)
+                ShowLoadingScreen(false);
+        }
+    }
 
     public UILabel LotteryLabel;
+    public UILabel LabelTotal;
+    public UILabel LabelTotalValue;
+
+    public UISprite LoadingRing;
+
+    private int fetchRepeatRate = 3;
     
     void Awake()
     {
+        ShowLoadingScreen(true);
+
         if (LoadLotteryOfType != LotteryData.LotteryType.Instant)
-            RepeatFetching(3);
+            StartCoroutine("EnumeratorRepeatFetch", 3);
         else
         {
-            Data = new LotteryData {type = LotteryData.LotteryType.Instant, id = -1, name = "Instant", totalmoney = 35};
+            lotteryInstance = new LotteryData {type = LotteryData.LotteryType.Instant, id = -1, name = "Instant", totalmoney = 35};
         }
+
+        SessionController.instance.SessionStarted += SessionStarted;
+        SessionController.instance.SessionEnded += SessionEnded;
+        BetsController.instance.OnBetPerformed += BetPerformed;
     }
-    
+
+    void ShowLoadingScreen(bool show)
+    {
+        LotteryLabel.cachedGameObject.SetActive(!show);
+        LabelTotal.cachedGameObject.SetActive(!show);
+        LabelTotalValue.cachedGameObject.SetActive(!show);
+
+        LoadingRing.cachedGameObject.SetActive(show);
+    }
+
+    private void BetPerformed(object sender, Bet bet)
+    {
+        
+    }
+
+    private void SessionStarted(User user)
+    {
+        fetchRepeatRate = 10;
+        StartCoroutine("AuhorizedLotteryDataFetch", fetchRepeatRate);
+    }
+
+    private void SessionEnded(User user)
+    {
+        fetchRepeatRate = 3;
+        StopCoroutine("AuhorizedLotteryDataFetch");
+    }
+
     public void FetchData()
     {
         LotteryController.instance.FetchLottery(LoadLotteryOfType, OnLotteryDataFetched);
     }
+
+    public void ConstantFetchData()
+    {
+        LotteryController.instance.FetchLottery(LoadLotteryOfType, OnceAgainDataFetched);
+    }
+
 
     void RepeatFetching(int count)
     {
@@ -47,7 +103,17 @@ public class LotteryItem : MonoBehaviour
             counter++;
             FetchData();
 
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(fetchRepeatRate);
+        }
+    }
+
+    private IEnumerator AuhorizedLotteryDataFetch(int rate)
+    {
+        while (SessionController.isAuthorized)
+        {
+            ConstantFetchData();
+
+            yield return new WaitForSeconds(rate);
         }
     }
 
@@ -66,16 +132,38 @@ public class LotteryItem : MonoBehaviour
         {
             //Debug.Log(">> LOADED >> " + fetchedObject.type + " >> " + fetchedObject.expiration);
 
-            Data = fetchedObject;
+            lotteryInstance = fetchedObject;
+            UpdateView(lotteryInstance);
 
             CallDataUpdated(this);
-
-            LotteryLabel.text = Data.name;
         }
         else
         {
-            LotteryLabel.text = "Loading...";
+            //Debug.Log("Ошибка: " + error + " Data: "+ fetchedObject);
+            //LotteryLabel.text = "";
         }
 
+    }
+
+    private void OnceAgainDataFetched(LotteryData fetchedObject, string error)
+    {
+
+        if (fetchedObject != null && error == null)
+        {
+            StopCoroutine("EnumeratorRepeatFetch");
+
+            lotteryInstance = fetchedObject;
+
+            Debug.Log("Bets: " + fetchedObject.MyBets.Length);
+
+            UpdateView(lotteryInstance);
+
+            CallDataUpdated(this);
+        }
+    }
+
+    void UpdateView(LotteryData data)
+    {
+        LotteryLabel.text = lotteryInstance.name;
     }
 }

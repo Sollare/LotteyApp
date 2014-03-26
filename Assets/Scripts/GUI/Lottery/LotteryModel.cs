@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LotteyServerApp.Models;
 using UnityEngine;
 using System.Collections;
 
@@ -12,6 +13,8 @@ public class LotteryModel
 
     protected virtual void CallLotteryUpdated(Lottery e)
     {
+        //Debug.Log("Лотерея " + e.Data.id + " была обновлена");
+
         EventHandler<Lottery> handler = OnLotteryUpdate;
         if (handler != null) handler(this, e);
     }
@@ -21,6 +24,14 @@ public class LotteryModel
     protected virtual void CallLotteryLoaded(Lottery e)
     {
         EventHandler<Lottery> handler = OnLotteryLoaded;
+        if (handler != null) handler(this, e);
+    }
+    
+    public event EventHandler<Lottery> OnBetPerformed;
+
+    protected virtual void BetBerformed(Lottery e)
+    {
+        EventHandler<Lottery> handler = OnBetPerformed;
         if (handler != null) handler(this, e);
     }
 
@@ -57,7 +68,6 @@ public class LotteryModel
     {
         // Связанный коллбэк для того, чтобы сначала обработать здесь, а затем уже принять
         WWWOperations.instance.FetchJsonObject<LotteryData>(GetUrlStringForLottery(lotteryType), callback, FetLotteryChainedCallback);
-            //FetchJsonObject<LotteryData>(GetUrlStringForLottery(lotteryType), FetchLotteryCallback);
     }
 
     private void FetLotteryChainedCallback(LotteryData fetchedData, string error, WWWOperations.OnObjectFecthed<LotteryData> callback)
@@ -70,11 +80,15 @@ public class LotteryModel
         else
         {
             var updatedLottery = UpdateExistingLottery(fetchedData);
-            CallLotteryUpdated(updatedLottery);
+            
+            if(updatedLottery != null)
+                CallLotteryUpdated(updatedLottery);
         }
 
         callback(fetchedData, error);
     }
+
+
 
     //private void FetchLotteryCallback(LotteryData fetchedData, string error)
     //{
@@ -96,7 +110,7 @@ public class LotteryModel
 
         if (_lotteries.Any(l => l.Data.id == lotteryData.id || l.Data.type == lotteryData.type))
         {
-            Debug.Log(string.Format("Лотерея с указанным ID: {0} или типом: {1} уже существует", lotteryData.id, lotteryData.type));
+            //Debug.Log(string.Format("Лотерея с указанным ID: {0} или типом: {1} уже существует", lotteryData.id, lotteryData.type));
             return null;
         }
         else
@@ -139,8 +153,14 @@ public class LotteryModel
     }
 
     private static string GetUrlStringForLottery(LotteryData.LotteryType lotteryType)
-    {
-        return string.Format("{0}/UserAPI/ActualDrawing?type={1}", WWWOperations.instance.ServerUrl,
-            (int)lotteryType);
+    {//http://sstucloud.no-ip.info/LotteyServerApp/UserAPI/ActualDrawingForUser?type=0&userId=2
+
+        if (SessionController.instance.currentUser != null)
+            return string.Format("{0}/UserAPI/ActualDrawingForUser?type={1}&userId={2}",
+                WWWOperations.instance.ServerUrl,
+                (int) lotteryType, SessionController.instance.currentUser.id);
+        else
+            return string.Format("{0}/UserAPI/ActualDrawing?type={1}", WWWOperations.instance.ServerUrl, (int)lotteryType);
+        
     }
 }

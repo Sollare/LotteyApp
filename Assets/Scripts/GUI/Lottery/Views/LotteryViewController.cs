@@ -1,15 +1,29 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 
 public class LotteryViewController : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    public LotteryItemDetails DetailItem;
+    public UIWidget HeaderTimerWidghet;
+    public UIWidget HeaderLotteryNameWidghet;
+
+    public static LotteryItem CurrentLotteryItem
+    {
+        get
+        {
+            return LotteriesScrollView.instance.currentItem;
+        }
+    }
+
+    void Awake()
+    {
+        BetsController.instance.OnBetPerformed += BetPerformed;
+    }
+
+    private void BetPerformed(object sender, Bet bet)
+    {
+        DetailItem.UpdateInfo(CurrentLotteryItem.lotteryInstance);
+        DetailItem.Show();
+    }
 }

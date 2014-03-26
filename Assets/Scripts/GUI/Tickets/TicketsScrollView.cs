@@ -7,7 +7,7 @@ namespace Assets.Scripts.GUI
 {
     public delegate void TicketViewPulled(DragDropTicket ticket);
     public delegate void TicketViewReturned(DragDropTicket ticket);
-    public delegate void TicketViewActivated(DragDropTicket ticket);
+    public delegate void TicketViewActivated(DragDropTicket ticket, LotteryItem item);
 
     public delegate void TicketViewEvent(DragDropTicket ticket);
 
@@ -29,25 +29,25 @@ namespace Assets.Scripts.GUI
         
         protected virtual void CallTicketPulled(DragDropTicket ticket)
         {
-            Debug.Log(GetType().Name + ": Потащили билет " + ticket.ticketInstance.id);
+            //Debug.Log(GetType().Name + ": Потащили билет " + ticket.ticketInstance.id);
 
             TicketViewPulled handler = OnTicketPulled;
             if (handler != null) handler(ticket);
         }
         protected virtual void CallTicketReturned(DragDropTicket ticket)
         {
-            Debug.Log(GetType().Name + ": Вернули билет " + ticket.ticketInstance.id);
+            //Debug.Log(GetType().Name + ": Вернули билет " + ticket.ticketInstance.id);
 
             TicketViewReturned handler = OnTicketReturned;
             if (handler != null) handler(ticket);
         }
 
-        protected virtual void CallTicketActivated(DragDropTicket ticket)
+        protected virtual void CallTicketActivated(DragDropTicket ticket, LotteryItem item)
         {
-            Debug.Log(GetType().Name + ": Активировали билет " + ticket.ticketInstance.id);
+            //Debug.Log(GetType().Name + ": Активировали билет " + ticket.ticketInstance.id);
 
             TicketViewActivated handler = OnTicketActivated;
-            if (handler != null) handler(ticket);
+            if (handler != null) handler(ticket, LotteriesScrollView.instance.currentItem);
         }
 
         public void Start()

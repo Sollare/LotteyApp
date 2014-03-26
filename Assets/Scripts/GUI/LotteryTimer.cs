@@ -4,6 +4,26 @@ using System.Collections;
 
 public class LotteryTimer : MonoBehaviour
 {
+    public delegate void TimeStringChanged(string timeString);
+
+    public event TimeStringChanged OnTimeStringChanged;
+
+    protected virtual void CallTimeStringChanged(string timestring)
+    {
+        TimeStringChanged handler = OnTimeStringChanged;
+        if (handler != null) handler(timestring);
+    }
+
+
+    private static LotteryTimer _instance;
+    public static LotteryTimer instance
+    {
+        get
+        {
+            return _instance;
+        }
+    }
+
     public UILabel label;
 
     public bool updateLabel;
@@ -15,16 +35,18 @@ public class LotteryTimer : MonoBehaviour
     private TimeSpan _secondSpan = new TimeSpan(0,0,1);
 
     public const string EmptyTimerString = "--:--:--";
+    private string resultString = EmptyTimerString;
 
     public void SetExpirationDate(DateTime expirationDate)
     {
-        Debug.Log(expirationDate);
+        //Debug.Log(expirationDate);
         this.expirationDate = expirationDate;
         _timeSpan = expirationDate.Subtract(DateTime.Now);
     }
 
     void Awake()
     {
+        _instance = this;
         label.text = EmptyTimerString;
     }
 
@@ -43,8 +65,11 @@ public class LotteryTimer : MonoBehaviour
     {
         while (_timeSpan.HasValue && _timeSpan.Value.TotalSeconds > 0)
         {
+            resultString = GetFormatString();
+            CallTimeStringChanged(resultString);
+
             if (updateLabel && label)
-                label.text = ToString();
+                label.text = resultString;
 
             yield return new WaitForSeconds(1f);
             
@@ -52,7 +77,7 @@ public class LotteryTimer : MonoBehaviour
         }
     }
 
-    public override string ToString()
+    private string GetFormatString()
     {
         if (_timeSpan == null) return EmptyTimerString;
 
@@ -62,5 +87,10 @@ public class LotteryTimer : MonoBehaviour
                      ((int)_timeSpan.Value.TotalHours).ToString("00"),
                      _timeSpan.Value.Minutes.ToString("00"),
                      _timeSpan.Value.Seconds.ToString("00"));
+    }
+
+    public override string ToString()
+    {
+        return resultString;
     }
 }

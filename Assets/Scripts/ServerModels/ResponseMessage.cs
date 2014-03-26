@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace LotteyServerApp.Models
 {
     [Serializable]
-    public class ResponseMessage
+    public class ResponseMessage : EventArgs
     {
         public int Code;
         public string Message;

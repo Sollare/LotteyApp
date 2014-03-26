@@ -38,10 +38,10 @@ public class TicketsController
     /// </summary>
     public TicketViewActivated OnTicketViewActivated;
 
-    public virtual void CallTicketActivated(DragDropTicket ticket)
+    public virtual void CallTicketActivated(DragDropTicket ticket, LotteryItem item)
     {
         TicketViewActivated handler = OnTicketViewActivated;
-        if (handler != null) handler(ticket);
+        if (handler != null) handler(ticket, item);
     }
 
     public virtual void CallTicketsModelLoaded(TicketData ticketData)

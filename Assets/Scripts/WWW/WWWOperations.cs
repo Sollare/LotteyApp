@@ -8,6 +8,8 @@ public class WWWOperations : MonoBehaviour
     public delegate void OnObjectFecthed<T>(T fetchedObject, string error);
     public delegate void OnObjectFecthedChainedCallback<T>(T fetchedObject, string error, OnObjectFecthed<T> callback);
 
+    public bool showDebug;
+
     private static WWWOperations _instance;
 
     public static WWWOperations instance
@@ -42,12 +44,14 @@ public class WWWOperations : MonoBehaviour
 
         if (www.error != null)
         {
-            Debug.LogWarning("Fetch error: " + www.error);
+            if (instance.showDebug)
+                Debug.LogWarning("Fetch error: " + www.error);
             callback(null, www.error);
         }
         else
         {
-            Debug.LogWarning("Fetched: " + www.text);
+            if (instance.showDebug)
+                Debug.LogWarning("Fetched: " + www.text);
             callback(www.text, null);
         }
     }
@@ -59,7 +63,8 @@ public class WWWOperations : MonoBehaviour
 
     static IEnumerator EnumeratorFetchJsonObjectChained<T>(string url, OnObjectFecthed<T> callback)
     {
-        Debug.Log("Fetching using url: " + url);
+        if (instance.showDebug)
+            Debug.Log("Fetching using url: " + url);
 
         var www = new WWW(url);
 
@@ -67,7 +72,8 @@ public class WWWOperations : MonoBehaviour
 
         if (www.error != null)
         {
-            Debug.LogWarning("Fetch error: " + www.error);
+            if (instance.showDebug)
+                Debug.LogWarning("Fetch error: " + www.error);
             callback(default(T), www.error);
             //callback(default(T), www.error);
         }
@@ -79,7 +85,8 @@ public class WWWOperations : MonoBehaviour
             
             if (object.Equals(deserializedObject, default(T)))
             {
-                Debug.Log("Fetched object of type <" + typeof(T) + "> is null");
+                if (instance.showDebug)
+                    Debug.Log("Fetched object of type <" + typeof(T) + "> is null");
                 callback(deserializedObject, "Не удалось десериализовать объект");
             }
             else
@@ -99,7 +106,8 @@ public class WWWOperations : MonoBehaviour
 
     static IEnumerator EnumeratorFetchJsonObject<T>(string url, OnObjectFecthed<T> originalCallback, OnObjectFecthedChainedCallback<T> chainedCallback)
     {
-        Debug.Log("Fetching using url: " + url);
+        if (instance.showDebug)
+            Debug.Log("Fetching using url: " + url);
 
         var www = new WWW(url);
 
@@ -107,7 +115,8 @@ public class WWWOperations : MonoBehaviour
 
         if (www.error != null)
         {
-            Debug.LogWarning("Fetch error: " + www.error);
+            if (instance.showDebug)
+                Debug.LogWarning("Fetch error: " + www.error);
             chainedCallback(default(T), www.error, originalCallback);
             //callback(default(T), www.error);
         }
@@ -119,7 +128,8 @@ public class WWWOperations : MonoBehaviour
 
             if (object.Equals(deserializedObject, default(T)))
             {
-                Debug.Log("Fetched object of type <" + typeof(T) + "> is null");
+                if (instance.showDebug)
+                    Debug.Log("Fetched object of type <" + typeof(T) + "> is null");
                 chainedCallback(deserializedObject, "Не удалось десериализовать объект", originalCallback);
             }
             else

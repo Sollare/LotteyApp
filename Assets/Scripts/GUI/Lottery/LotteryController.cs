@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 
 public class LotteryController : MonoBehaviour
@@ -16,6 +17,18 @@ public class LotteryController : MonoBehaviour
         }
     }
 
+    private LotteryViewController _view;
+
+    public LotteryViewController View
+    {
+        get
+        {
+            if (_view != null) return _view;
+            else
+                return (_view = GameObject.Find("LotteryController").GetComponent<LotteryViewController>());
+        }
+    }
+
     private static LotteryController _instance;
 
     public static LotteryController instance
@@ -28,10 +41,9 @@ public class LotteryController : MonoBehaviour
         }
     }
 
-	// Use this for initialization
+
     void Awake()
     {
-        
         _instance = this;
     }
 

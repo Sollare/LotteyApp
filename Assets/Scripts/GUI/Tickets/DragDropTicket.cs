@@ -35,7 +35,7 @@ public class DragDropTicket : UIDragDropItem
         collider.enabled = true;
 
         TicketViewActivated handler = OnTicketActivated;
-        if (handler != null) handler(ticket);
+        if (handler != null) handler(ticket, LotteriesScrollView.instance.currentItem);
 
         TicketsController.instance.Model.RemoveTicket(ticketInstance);
 
