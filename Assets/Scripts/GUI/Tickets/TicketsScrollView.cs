@@ -63,7 +63,7 @@ namespace Assets.Scripts.GUI
 
             grid.OnGridUpdated += OnGridUpdated;
             // TODO: КОСТЫЛЬ!!!
-            TicketsController.instance.Initialize();
+            //TicketsController.instance.Initialize();
         }
 
         private void OnGridUpdated(TicketsGrid grid)

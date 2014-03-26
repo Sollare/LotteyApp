@@ -6,6 +6,7 @@ public class WWWOperations : MonoBehaviour
 {
     public delegate void OnDataFecthed(string data, string error);
     public delegate void OnObjectFecthed<T>(T fetchedObject, string error);
+    public delegate void OnObjectFecthedChainedCallback<T>(T fetchedObject, string error, OnObjectFecthed<T> callback);
 
     private static WWWOperations _instance;
 
@@ -53,10 +54,10 @@ public class WWWOperations : MonoBehaviour
 
     public void FetchJsonObject<T>(string url, OnObjectFecthed<T> callback)
     {
-        StartCoroutine(EnumeratorFetchJsonObject<T>(url, callback));
+        StartCoroutine(EnumeratorFetchJsonObjectChained<T>(url, callback));
     }
 
-    static IEnumerator EnumeratorFetchJsonObject<T>(string url, OnObjectFecthed<T> callback)
+    static IEnumerator EnumeratorFetchJsonObjectChained<T>(string url, OnObjectFecthed<T> callback)
     {
         Debug.Log("Fetching using url: " + url);
 
@@ -68,16 +69,17 @@ public class WWWOperations : MonoBehaviour
         {
             Debug.LogWarning("Fetch error: " + www.error);
             callback(default(T), www.error);
+            //callback(default(T), www.error);
         }
         else
         {
-            Debug.LogWarning("Fetched: " + www.text);
+            //Debug.LogWarning("Fetched: " + www.text);
 
             var deserializedObject = JsonConvert.DeserializeObject<T>(www.text);
             
-            if (deserializedObject.Equals(default(T)))
+            if (object.Equals(deserializedObject, default(T)))
             {
-                Debug.LogError("Не удалось десериализовать объект");
+                Debug.Log("Fetched object of type <" + typeof(T) + "> is null");
                 callback(deserializedObject, "Не удалось десериализовать объект");
             }
             else
@@ -89,4 +91,47 @@ public class WWWOperations : MonoBehaviour
 
         }
     }
+
+    public void FetchJsonObject<T>(string url, OnObjectFecthed<T> originalCallback, OnObjectFecthedChainedCallback<T> chainedCallback)
+    {
+        StartCoroutine(EnumeratorFetchJsonObject<T>(url, originalCallback, chainedCallback));
+    }
+
+    static IEnumerator EnumeratorFetchJsonObject<T>(string url, OnObjectFecthed<T> originalCallback, OnObjectFecthedChainedCallback<T> chainedCallback)
+    {
+        Debug.Log("Fetching using url: " + url);
+
+        var www = new WWW(url);
+
+        yield return www;
+
+        if (www.error != null)
+        {
+            Debug.LogWarning("Fetch error: " + www.error);
+            chainedCallback(default(T), www.error, originalCallback);
+            //callback(default(T), www.error);
+        }
+        else
+        {
+            //Debug.LogWarning("Fetched: " + www.text);
+
+            var deserializedObject = JsonConvert.DeserializeObject<T>(www.text);
+
+            if (object.Equals(deserializedObject, default(T)))
+            {
+                Debug.Log("Fetched object of type <" + typeof(T) + "> is null");
+                chainedCallback(deserializedObject, "Не удалось десериализовать объект", originalCallback);
+            }
+            else
+            {
+                //callback(deserializedObject, null);
+                chainedCallback(deserializedObject, null, originalCallback);
+            }
+
+            //Debug.LogWarning("Deserialization result: " + deserializedObject);
+
+        }
+    }
+
+    
 }

@@ -1,12 +1,21 @@
 ﻿using System;
 
 
-    public class Drawing
+    [Serializable]
+    public class LotteryData
     {
         public int id;
         public string name;
         public int totalmoney;
         public DateTime expiration;
+        public LotteryType type;
+
+        public enum LotteryType
+        {
+            Daily,
+            Week,
+            Instant
+        }
     }
 
     public class UserInfo

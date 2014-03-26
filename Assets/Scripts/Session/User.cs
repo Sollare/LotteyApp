@@ -24,7 +24,13 @@ public class User
         sb.AppendLine("Email:" + email);
 
         sb.AppendLine("-----");
-        sb.AppendLine("Tickets Count: " + freeTickets.Count());
+        sb.AppendLine("Tickets: " );
+
+        foreach (var ticket in freeTickets)
+        {
+            sb.AppendLine("Ticket: " + ticket.id);
+        }
+
         sb.AppendLine("Bets: " + bets.Count());
         sb.AppendLine("Wins: " + victories.Count());
 

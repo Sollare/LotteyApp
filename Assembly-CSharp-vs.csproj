@@ -529,6 +529,7 @@
      <Compile Include="Assets\Scripts\GUI\Lottery\LotteriesScrollView.cs" />
      <Compile Include="Assets\Scripts\GUI\Lottery\LotteryController.cs" />
      <Compile Include="Assets\Scripts\GUI\Lottery\LotteryDropContainer.cs" />
+     <Compile Include="Assets\Scripts\GUI\Lottery\LotteryModel.cs" />
      <Compile Include="Assets\Scripts\GUI\Tickets\BuyButton.cs" />
      <Compile Include="Assets\Scripts\GUI\Tickets\DragDropTicket.cs" />
      <Compile Include="Assets\Scripts\GUI\Tickets\TicketPlaceholder.cs" />

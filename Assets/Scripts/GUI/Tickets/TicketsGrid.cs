@@ -80,7 +80,8 @@ public class TicketsGrid : UIGrid
     {
         Clear();
 
-        InsertTickets(model.Tickets);
+        if (model != null)
+            InsertTickets(model.Tickets);
 
         GridUpdated(this);
     }
@@ -95,7 +96,7 @@ public class TicketsGrid : UIGrid
 
     public void InsertTickets(IEnumerable<Ticket> tickets, int at = 0)
     {
-        if (!Application.isPlaying) return;
+        if (!Application.isPlaying || tickets == null) return;
 
         var containingTicketsId = Items.Select(t => t.ticketInstance.id);
 

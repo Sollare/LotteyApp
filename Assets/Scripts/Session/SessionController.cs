@@ -64,7 +64,7 @@ public class SessionController : MonoBehaviour
     }
     public void UpdateUserData(int userId)
     {
-        Debug.Log(">> Запрос информации о пользователе");
+        //Debug.Log(">> Запрос информации о пользователе");
         string userInfoString = string.Format("{0}/UserAPI?id={1}", WWWOperations.instance.ServerUrl, userId);
        
         WWWOperations.instance.FetchJsonObject<User>(userInfoString, UserInfoUpdateCallback);

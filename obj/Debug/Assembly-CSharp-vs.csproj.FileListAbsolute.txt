@@ -1,0 +1,12 @@
+E:\SourceTree\LotteyApp\Temp\bin\Debug\Assembly-CSharp.dll
+E:\SourceTree\LotteyApp\Temp\bin\Debug\Assembly-CSharp.pdb
+E:\SourceTree\LotteyApp\Temp\bin\Debug\SampleClassLibrary.dll
+E:\SourceTree\LotteyApp\Temp\bin\Debug\UnityEditor.dll
+E:\SourceTree\LotteyApp\Temp\bin\Debug\UnityEngine.dll
+E:\SourceTree\LotteyApp\Temp\bin\Debug\Mono.Cecil.dll
+E:\SourceTree\LotteyApp\Temp\bin\Debug\nunit.framework.dll
+E:\SourceTree\LotteyApp\Temp\bin\Debug\Unity.DataContract.dll
+E:\SourceTree\LotteyApp\Temp\bin\Debug\ICSharpCode.NRefactory.dll
+E:\SourceTree\LotteyApp\obj\Debug\Assembly-CSharp-vs.csprojResolveAssemblyReference.cache
+E:\SourceTree\LotteyApp\obj\Debug\Assembly-CSharp.dll
+E:\SourceTree\LotteyApp\obj\Debug\Assembly-CSharp.pdb

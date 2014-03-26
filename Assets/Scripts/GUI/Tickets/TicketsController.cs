@@ -67,9 +67,16 @@ public class TicketsController
         if (!Application.isPlaying) return;
 
         SessionController.instance.SessionStarted += OnSessionStarted;
+        SessionController.instance.SessionEnded += OnSessionEnded;
 
         Model = new TicketData(this, 5);
         CallTicketsModelLoaded(Model);
+    }
+
+    private void OnSessionEnded(User user)
+    {
+        Model = null;
+        CallTicketsModelLoaded(null);
     }
 
     private void OnSessionStarted(User user)
@@ -77,6 +84,8 @@ public class TicketsController
         Model = new TicketData(this, user.freeTickets);
         CallTicketsModelLoaded(Model);
     }
+
+
 }
 
 [Serializable]
