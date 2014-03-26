@@ -14,6 +14,7 @@ public class LotteryItem : MonoBehaviour
 
     public LotteryData.LotteryType LoadLotteryOfType;
 
+    [SerializeField]
     private LotteryData _lotteryInstance;
 
     public LotteryData lotteryInstance
@@ -69,6 +70,7 @@ public class LotteryItem : MonoBehaviour
     private void SessionStarted(User user)
     {
         fetchRepeatRate = 10;
+        ShowLoadingScreen(true);
         StartCoroutine("AuhorizedLotteryDataFetch", fetchRepeatRate);
     }
 
@@ -151,8 +153,20 @@ public class LotteryItem : MonoBehaviour
         if (fetchedObject != null && error == null)
         {
             StopCoroutine("EnumeratorRepeatFetch");
+            StopCoroutine("AuhorizedLotteryDataFetch");
 
-            lotteryInstance = fetchedObject;
+            ShowLoadingScreen(false);
+
+            if (lotteryInstance == null)
+            {
+                lotteryInstance = fetchedObject;
+                Debug.Log("Complete update");
+            }
+            else
+            {
+                lotteryInstance.totalmoney = fetchedObject.totalmoney;
+                lotteryInstance.MyBets = fetchedObject.MyBets;
+            }
 
             Debug.Log("Bets: " + fetchedObject.MyBets.Length);
 
@@ -164,6 +178,19 @@ public class LotteryItem : MonoBehaviour
 
     void UpdateView(LotteryData data)
     {
+        if (data.totalmoney >= 0)
+        {
+            LabelTotalValue.text = string.Format("${0:D3}.00", data.totalmoney);
+
+            LabelTotal.cachedGameObject.SetActive(true);
+            LabelTotalValue.cachedGameObject.SetActive(true);
+        }
+        else
+        {
+            LabelTotal.cachedGameObject.SetActive(true);
+            LabelTotalValue.cachedGameObject.SetActive(true);
+        }
+
         LotteryLabel.text = lotteryInstance.name;
     }
 }

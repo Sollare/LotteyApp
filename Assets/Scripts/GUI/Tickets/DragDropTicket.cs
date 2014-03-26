@@ -60,6 +60,8 @@ public class DragDropTicket : UIDragDropItem
 
     public void Pull()
     {
+        if (UICamera.currentTouch == null) return;
+
         if (UICamera.currentTouch != null)
         UICamera.currentTouch.pressed = gameObject;
 

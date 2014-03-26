@@ -96,7 +96,7 @@ public class TicketsGrid : UIGrid
 
     public void InsertTickets(IEnumerable<Ticket> tickets, int at = 0)
     {
-        if (!Application.isPlaying || tickets == null) return;
+        if (tickets == null) return;
 
         var containingTicketsId = Items.Select(t => t.ticketInstance.id);
 
@@ -140,8 +140,6 @@ public class TicketsGrid : UIGrid
 
     public void RemoveGridElement(DragDropTicket ticket)
     {
-        if (!Application.isPlaying) return;
-
         if (Items.Remove(ticket))
         {
             ticket.gameObject.SetActive(false);
@@ -150,8 +148,6 @@ public class TicketsGrid : UIGrid
 
     public void RemoveGridElement(Ticket ticket)
     {
-        if (!Application.isPlaying) return;
-
         var containingTicket = Items.FirstOrDefault(t => t.ticketInstance.id == ticket.id);
 
         if (containingTicket != null)
@@ -163,8 +159,6 @@ public class TicketsGrid : UIGrid
 
     public void RemoveGridElementAt(int index)
     {
-        if (!Application.isPlaying) return;
-
         DragDropTicket item = null;
         try
         {
@@ -192,13 +186,11 @@ public class TicketsGrid : UIGrid
 
     public void Clear()
     {
-        if (Application.isEditor) return;
-
         for (int i = 0; i < transform.childCount; i++)
         {
             var child = transform.GetChild(i);
 
-            if (child.name == "Z(Buy)") continue;
+            if (child.name == "Z(Buy)" || child.gameObject == TicketPrefab) continue;
 
             DestroyImmediate(child.gameObject);
         }

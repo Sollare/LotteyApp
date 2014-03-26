@@ -23,10 +23,6 @@ public class LotteryItemDetails : MonoBehaviour
         }
     }
 
-    void Awake()
-    {
-        gameObject.SetActive(false);
-    }
 
     public void UpdateInfo(LotteryData data)
     {
@@ -39,7 +35,9 @@ public class LotteryItemDetails : MonoBehaviour
         lotteryData = data;
 
         TimeOver.text = LotteryTimer.instance.ToString();
-        var bets = lotteryData.MyBets.Length;
+        var bets = 0;
+        if (lotteryData.MyBets != null)
+            bets = lotteryData.MyBets.Count();
 
         TotalPrize.text = string.Format("${0}.00", lotteryData.totalmoney);
         Bets.text = string.Format("you made {0} bet{1}", bets, bets <= 1 ? "s" : "");
@@ -48,7 +46,11 @@ public class LotteryItemDetails : MonoBehaviour
     public void Show()
     {
         gameObject.SetActive(true);
+        Invoke("ShowC", Time.deltaTime);
+    }
 
+    private void ShowC()
+    {
         LotteryTimer.instance.OnTimeStringChanged += TimerStringChanged;
 
         cachedUIWidget.alpha = 0f;
@@ -60,7 +62,7 @@ public class LotteryItemDetails : MonoBehaviour
         LotteryTimer.instance.OnTimeStringChanged -= TimerStringChanged;
 
         var tweener = TweenAlpha.Begin(gameObject, 0.3f, 0f);
-        tweener.AddOnFinished(delegate { gameObject.SetActive(false); });
+        tweener.AddOnFinished(delegate { gameObject.SetActive(false); Destroy(tweener);});
     }
 
     private void TimerStringChanged(string timeString)

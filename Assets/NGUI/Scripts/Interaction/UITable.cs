@@ -76,9 +76,12 @@ public class UITable : UIWidgetContainer
 
 	public bool repositionNow { set { if (value) { mReposition = true; enabled = true; } } }
 
-	/// <summary>
-	/// Returns the list of table's children, sorted alphabetically if necessary.
-	/// </summary>
+    /// <summary>
+    /// Returns the list of table's children, sorted alphabetically if necessary.
+    /// </summary>
+    /// 
+
+    public float delayedExecute = 0f;
 
 	public List<Transform> children
 	{
@@ -231,7 +234,9 @@ public class UITable : UIWidgetContainer
 	protected virtual void Start ()
 	{
 		Init();
-		Reposition();
+
+        Invoke("Reposition", delayedExecute);
+		//Reposition();
 		enabled = false;
 	}
 

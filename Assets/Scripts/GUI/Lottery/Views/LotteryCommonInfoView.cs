@@ -45,7 +45,7 @@ public class LotteryCommonInfoView : MonoBehaviour {
         else
             SetLotteryInfoPanelVisible(true);
 
-        MainLotteryTimer.SetExpirationDate(selectedItem.lotteryInstance.expiration);
+        MainLotteryTimer.SetExpirationTime(selectedItem.lotteryInstance.expiration);
         MainLotteryTimer.StartTimer();
     }
 

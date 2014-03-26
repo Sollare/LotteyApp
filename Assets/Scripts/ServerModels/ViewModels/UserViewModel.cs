@@ -6,8 +6,8 @@
     {
         public int id;
         public string name;
-        public int totalmoney;
-        public DateTime expiration;
+        public int totalmoney = -1;
+        public double expiration;
         public LotteryType type;
         public Bet[] MyBets;
 

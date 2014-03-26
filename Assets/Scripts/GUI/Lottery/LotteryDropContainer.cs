@@ -49,7 +49,7 @@ public class LotteryDropContainer : MonoBehaviour
         //AbortPreparation();
     }
 
-    void AbortPreparation()
+    public void AbortPreparation()
     {
         StopCoroutine("WaitForCursorOver");
 

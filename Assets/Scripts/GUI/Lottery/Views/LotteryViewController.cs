@@ -8,6 +8,8 @@ public class LotteryViewController : MonoBehaviour {
     public UIWidget HeaderTimerWidghet;
     public UIWidget HeaderLotteryNameWidghet;
 
+    public LotteryDropContainer TicketsDropContainer;
+
     public static LotteryItem CurrentLotteryItem
     {
         get
@@ -25,5 +27,18 @@ public class LotteryViewController : MonoBehaviour {
     {
         DetailItem.UpdateInfo(CurrentLotteryItem.lotteryInstance);
         DetailItem.Show();
+
+        HeaderLotteryNameWidghet.cachedGameObject.SetActive(true);
+        TweenAlpha.Begin(HeaderTimerWidghet.cachedGameObject, 0.1f, 0f);
+        TweenAlpha.Begin(HeaderLotteryNameWidghet.cachedGameObject, 0.3f, 1f);
+    }
+
+    public void CloseLotteryDetails()
+    {
+        DetailItem.Hide();
+
+        TicketsDropContainer.AbortPreparation();
+        TweenAlpha.Begin(HeaderTimerWidghet.cachedGameObject, 0.1f, 1f);
+        TweenAlpha.Begin(HeaderLotteryNameWidghet.cachedGameObject, 0.3f, 0f);
     }
 }

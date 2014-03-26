@@ -11,6 +11,7 @@ public class SessionController : MonoBehaviour
     public event SessionDelegate SessionEnded;
 
     public static bool isAuthorized;
+    public static bool isAttemptingAuthorization;
 
     protected virtual void OnSessionStarted(User user)
     {
@@ -51,8 +52,10 @@ public class SessionController : MonoBehaviour
 
     public void SignIn(string username, string password)
     {
-        string authorizationString = string.Format("{0}/BetaApi/Login.aspx?name={1}&password={2}", WWWOperations.instance.ServerUrl, username, password);
-        WWWOperations.instance.FetchJsonObject<ResponseMessage>(authorizationString, AuthorizationResult);
+        StopCoroutine("AuthorizationAttempts");
+
+        isAttemptingAuthorization = true;
+        StartCoroutine(AuthorizationAttempts(username, password));
     }
 
     public void SignOut()
@@ -99,6 +102,21 @@ public class SessionController : MonoBehaviour
 
             UpdateUserData(userId);
         }
+    }
+
+
+    IEnumerator AuthorizationAttempts(string username, string password)
+    {
+        int counter = 0;
+        while (counter++ < 3 && !isAuthorized)
+        {
+            string authorizationString = string.Format("{0}/BetaApi/Login.aspx?name={1}&password={2}", WWWOperations.instance.ServerUrl, username, password);
+            WWWOperations.instance.FetchJsonObject<ResponseMessage>(authorizationString, AuthorizationResult);
+
+            yield return new WaitForSeconds(4f);
+        }
+
+        isAttemptingAuthorization = false;
     }
 
     private void SignUpResult(ResponseMessage fetchedObject, string error)
