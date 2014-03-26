@@ -12,21 +12,32 @@ public class LotteryCommonInfoView : MonoBehaviour {
 	// Use this for initialization
 	void Awake () 
     {
-	    LotteriesScrollView.onNewLotteryTarget += NewLotteryTarget;
+	    LotteriesScrollView.OnItemChanged += ItemChanged;
+        LotteriesScrollView.OnSelectedItemDataUpdated += OnSelectedItemDataUpdated;
 	}
 
-    private void NewLotteryTarget(object sender, LotteryData lotteryData)
+    private void OnSelectedItemDataUpdated(LotteryItem selectedItem)
     {
-        if (lotteryData == null) return;
+        UpdateHeader(selectedItem);
+    }
 
-        Debug.Log("New Target: " + lotteryData.type);
+    private void ItemChanged(LotteryItem newItem)
+    {
+        UpdateHeader(newItem);
+    }
 
-        if (lotteryData.type == LotteryData.LotteryType.Instant)
+    void UpdateHeader(LotteryItem selectedItem)
+    {
+        if (selectedItem == null) return;
+
+        Debug.Log("New Target: " + selectedItem.name);
+
+        if (selectedItem.Data.type == LotteryData.LotteryType.Instant)
             SetLotteryInfoPanelVisible(false);
         else
             SetLotteryInfoPanelVisible(true);
 
-        MainLotteryTimer.SetExpirationDate(lotteryData.expiration);
+        MainLotteryTimer.SetExpirationDate(selectedItem.Data.expiration);
         MainLotteryTimer.StartTimer();
     }
 

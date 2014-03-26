@@ -4,6 +4,14 @@ using System.Collections;
 
 public class LotteryItem : MonoBehaviour
 {
+    public event DataExtensions.EventDelegate<LotteryItem> OnDataUpdated;
+
+    protected virtual void CallDataUpdated(LotteryItem value)
+    {
+        DataExtensions.EventDelegate<LotteryItem> handler = OnDataUpdated;
+        if (handler != null) handler(value);
+    }
+
     public LotteryData.LotteryType LoadLotteryOfType;
 
     public LotteryData Data;
@@ -56,9 +64,11 @@ public class LotteryItem : MonoBehaviour
 
         if (fetchedObject != null && error == null)
         {
-            Debug.Log(">> LOADED >> " + fetchedObject.type + " >> " + fetchedObject.expiration);
+            //Debug.Log(">> LOADED >> " + fetchedObject.type + " >> " + fetchedObject.expiration);
 
             Data = fetchedObject;
+
+            CallDataUpdated(this);
 
             LotteryLabel.text = Data.name;
         }
