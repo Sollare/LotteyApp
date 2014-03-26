@@ -6,15 +6,18 @@ public class LotteryItem : MonoBehaviour
 {
     public LotteryData.LotteryType LoadLotteryOfType;
 
-    public LotteryData Data { get; protected set; }
+    public LotteryData Data;
 
     public UILabel LotteryLabel;
-
-
+    
     void Awake()
     {
         if (LoadLotteryOfType != LotteryData.LotteryType.Instant)
             RepeatFetching(3);
+        else
+        {
+            Data = new LotteryData {type = LotteryData.LotteryType.Instant, id = -1, name = "Instant", totalmoney = 35};
+        }
     }
     
     public void FetchData()
@@ -50,10 +53,11 @@ public class LotteryItem : MonoBehaviour
         //public int totalmoney;
         //public DateTime expiration;
         //public LotteryType type;
-        Debug.Log(">> LOADED >> " + fetchedObject);
 
         if (fetchedObject != null && error == null)
         {
+            Debug.Log(">> LOADED >> " + fetchedObject.type + " >> " + fetchedObject.expiration);
+
             Data = fetchedObject;
 
             LotteryLabel.text = Data.name;

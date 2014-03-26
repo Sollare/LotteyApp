@@ -2,7 +2,7 @@
 
 
     [Serializable]
-    public class LotteryData
+    public class LotteryData : EventArgs
     {
         public int id;
         public string name;

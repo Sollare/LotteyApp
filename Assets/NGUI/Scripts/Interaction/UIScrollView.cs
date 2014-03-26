@@ -122,7 +122,6 @@ public class UIScrollView : MonoBehaviour
 	/// <summary>
 	/// Event callback to trigger when the drag process finished. Can be used for additional effects, such as centering on some object.
 	/// </summary>
-
 	public OnDragFinished onDragFinished;
 
 	// Deprecated functionality. Use 'movement' instead.
@@ -811,7 +810,7 @@ public class UIScrollView : MonoBehaviour
 
 	void LateUpdate ()
 	{
-		if (!Application.isPlaying) return;
+        if (!Application.isPlaying) return;
 		float delta = RealTime.deltaTime;
 
 		// Fade the scroll bars if needed
@@ -845,7 +844,7 @@ public class UIScrollView : MonoBehaviour
 
 		// Apply momentum
 		if (mShouldMove && !mPressed)
-		{
+        {
 			if (movement == Movement.Horizontal)
 			{
 				mMomentum -= mTrans.TransformDirection(new Vector3(mScroll * 0.05f, 0f, 0f));
@@ -877,16 +876,17 @@ public class UIScrollView : MonoBehaviour
 				if (restrictWithinPanel && mPanel.clipping != UIDrawCall.Clipping.None)
 					RestrictWithinBounds(false, canMoveHorizontally, canMoveVertically);
 				
+
 				if (mMomentum.magnitude < 0.0001f && onDragFinished != null) 
 					onDragFinished();
 				
 				return;
 			}
-			else
-			{
-				mScroll = 0f;
-				mMomentum = Vector3.zero;
-			}
+            else
+            {
+                mScroll = 0f;
+                mMomentum = Vector3.zero;
+            }
 		}
 		else mScroll = 0f;
 

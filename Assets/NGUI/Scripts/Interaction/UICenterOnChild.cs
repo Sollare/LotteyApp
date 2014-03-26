@@ -13,6 +13,9 @@ using UnityEngine;
 [AddComponentMenu("NGUI/Interaction/Center Scroll View on Child")]
 public class UICenterOnChild : MonoBehaviour
 {
+    public delegate void NewTargetToCenter(GameObject target);
+
+
 	/// <summary>
 	/// The strength of the spring.
 	/// </summary>
@@ -29,7 +32,10 @@ public class UICenterOnChild : MonoBehaviour
 	/// Callback to be triggered when the centering operation completes.
 	/// </summary>
 
-	public SpringPanel.OnFinished onFinished;
+    public SpringPanel.OnFinished onFinished;
+
+    public NewTargetToCenter OnNewTargetToCenter;
+
 
 	UIScrollView mScrollView;
 	GameObject mCenteredObject;
@@ -179,6 +185,9 @@ public class UICenterOnChild : MonoBehaviour
 			// Spring the panel to this calculated position
 			SpringPanel.Begin(mScrollView.panel.cachedGameObject,
 				panelTrans.localPosition - localOffset, springStrength).onFinished = onFinished;
+
+		    if (OnNewTargetToCenter != null)
+		        OnNewTargetToCenter(mCenteredObject);
 		}
 		else mCenteredObject = null;
 	}
