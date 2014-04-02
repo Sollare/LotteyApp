@@ -27,8 +27,6 @@ public class WWWOperations : MonoBehaviour
 
     void Start()
     {
-        SessionController.instance.SignIn("root", "123456");
-        //SessionController.instance.SignUp("Test", "test@yandex.ru", "123");
     }
 
     public void FetchData(string url, OnDataFecthed callback)

@@ -50,6 +50,16 @@ public class SessionController : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        Invoke("DelayedLogIn", 3f);   
+    }
+
+    void DelayedLogIn()
+    {
+        SessionController.instance.SignIn("root", "123456");
+    }
+
     public void SignIn(string username, string password)
     {
         StopCoroutine("AuthorizationAttempts");
@@ -79,7 +89,6 @@ public class SessionController : MonoBehaviour
        
         WWWOperations.instance.FetchJsonObject<User>(userInfoString, UserInfoUpdateCallback);
     }
-
 
     #region CallbackHandlers
 
