@@ -10,7 +10,7 @@ public class OverScreenPanel : MonoBehaviour
 
     void OnPress(bool isPressed)
     {
-        if(UICamera.currentTouch.current == gameObject)
+        if (isPressed == false && UICamera.currentTouch.current == gameObject)
             LotteryViewController.instance.OverScreen.SetVisible(false);
     }
 
@@ -24,7 +24,9 @@ public class OverScreenPanel : MonoBehaviour
         if (show)
         {
             gameObject.SetActive(true);
-            TweenAlpha.Begin(gameObject, 0.3f, 1f);
+
+            var tweener = TweenAlpha.Begin(gameObject, 0.3f, 1f);
+            tweener.onFinished.Clear();
         }
         else
         {
