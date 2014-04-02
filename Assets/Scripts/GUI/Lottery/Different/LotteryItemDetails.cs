@@ -54,7 +54,8 @@ public class LotteryItemDetails : MonoBehaviour
         LotteryTimer.instance.OnTimeStringChanged += TimerStringChanged;
 
         cachedUIWidget.alpha = 0f;
-        TweenAlpha.Begin(gameObject, 0.3f, 1f);
+        var tweener = TweenAlpha.Begin(gameObject, 0.3f, 1f);
+        tweener.onFinished.Clear();
     }
 
     public void Hide()
@@ -62,6 +63,7 @@ public class LotteryItemDetails : MonoBehaviour
         LotteryTimer.instance.OnTimeStringChanged -= TimerStringChanged;
 
         var tweener = TweenAlpha.Begin(gameObject, 0.3f, 0f);
+        tweener.onFinished.Clear();
         tweener.AddOnFinished(delegate { gameObject.SetActive(false); Destroy(tweener);});
     }
 
