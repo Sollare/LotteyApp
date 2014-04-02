@@ -19,6 +19,13 @@ public class LotteryDropContainer : MonoBehaviour
         scrollView.OnTicketPulled += TicketPulled;
         scrollView.OnTicketReturned += TicketReturned;
         scrollView.OnTicketActivated += TicketActivated;
+
+        BetsController.instance.OnBetPerformed += OnBetPerformed;
+    }
+
+    private void OnBetPerformed(object sender, Bet bet)
+    {
+        collider.enabled = false;
     }
 
     // Включаем коллайдер, ждем приема

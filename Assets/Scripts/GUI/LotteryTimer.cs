@@ -62,6 +62,8 @@ public class LotteryTimer : MonoBehaviour
         {
             resultString = GetFormatString();
 
+            Debug.Log(resultString);
+
             if (updateLabel && label)
                 label.text = resultString;
 

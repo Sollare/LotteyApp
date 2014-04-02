@@ -6,6 +6,7 @@ public class LotteryCommonInfoView : MonoBehaviour {
 
     public LotteryTimer MainLotteryTimer;
     public UIWidget LotteryInfoWidget;
+    public UILabel LotteryName;
 
     private static LotteryTimer _mainTimer;
     public static LotteryTimer MainTimer
@@ -31,6 +32,7 @@ public class LotteryCommonInfoView : MonoBehaviour {
 
     private void ItemChanged(LotteryItem newItem)
     {
+        Debug.Log(newItem);
         UpdateHeader(newItem);
     }
 
@@ -38,20 +40,22 @@ public class LotteryCommonInfoView : MonoBehaviour {
     {
         if (selectedItem == null || selectedItem.lotteryInstance == null) return;
 
+        LotteryName.text = selectedItem.lotteryInstance.name;
+
         //Debug.Log("New Target: " + selectedItem.name);
 
-        if (selectedItem.lotteryInstance.type == LotteryData.LotteryType.Instant)
-            SetLotteryInfoPanelVisible(false);
-        else
-            SetLotteryInfoPanelVisible(true);
+        //if (selectedItem.lotteryInstance.type == LotteryData.LotteryType.Instant)
+        //    SetLotteryInfoPanelVisible(false);
+        //else
+        //    SetLotteryInfoPanelVisible(true);
 
         MainLotteryTimer.SetExpirationTime(selectedItem.lotteryInstance.expiration);
         MainLotteryTimer.StartTimer();
     }
 
-    void SetLotteryInfoPanelVisible(bool value)
-    {
-        var alphaValue = value ? 1f : 0f;
-        TweenAlpha.Begin(LotteryInfoWidget.gameObject, 0.25f, alphaValue);
-    }
+    //void SetLotteryInfoPanelVisible(bool value)
+    //{
+    //    var alphaValue = value ? 1f : 0f;
+    //    TweenAlpha.Begin(LotteryInfoWidget.gameObject, 0.25f, alphaValue);
+    //}
 }

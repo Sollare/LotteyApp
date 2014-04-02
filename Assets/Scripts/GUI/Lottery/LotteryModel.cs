@@ -9,6 +9,14 @@ public class LotteryModel
 {
     private List<Lottery> _lotteries = new List<Lottery>(3);
 
+    public event EventHandler<Lottery> OnLotteryFinished;
+
+    public virtual void CallLotteryCompleted(Lottery e)
+    {
+        EventHandler<Lottery> handler = OnLotteryFinished;
+        if (handler != null) handler(this, e);
+    }
+
     public event EventHandler<Lottery> OnLotteryUpdate;
 
     protected virtual void CallLotteryUpdated(Lottery e)

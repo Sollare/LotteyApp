@@ -85,8 +85,7 @@ public class UISlider : UIProgressBar
 	/// <summary>
 	/// Position the scroll bar to be under the current touch.
 	/// </summary>
-
-	protected void OnPressBackground (GameObject go, bool isPressed)
+	protected virtual void OnPressBackground (GameObject go, bool isPressed)
 	{
 		if (UICamera.currentScheme == UICamera.ControlScheme.Controller) return;
 		mCam = UICamera.currentCamera;
@@ -97,8 +96,7 @@ public class UISlider : UIProgressBar
 	/// <summary>
 	/// Position the scroll bar to be under the current touch.
 	/// </summary>
-
-	protected void OnDragBackground (GameObject go, Vector2 delta)
+    protected virtual void OnDragBackground(GameObject go, Vector2 delta)
 	{
 		if (UICamera.currentScheme == UICamera.ControlScheme.Controller) return;
 		mCam = UICamera.currentCamera;
@@ -108,8 +106,7 @@ public class UISlider : UIProgressBar
 	/// <summary>
 	/// Save the position of the foreground on press.
 	/// </summary>
-
-	protected void OnPressForeground (GameObject go, bool isPressed)
+    protected virtual void OnPressForeground(GameObject go, bool isPressed)
 	{
 		if (UICamera.currentScheme == UICamera.ControlScheme.Controller) return;
 
@@ -125,7 +122,7 @@ public class UISlider : UIProgressBar
 	/// Drag the scroll bar in the specified direction.
 	/// </summary>
 
-	protected void OnDragForeground (GameObject go, Vector2 delta)
+    protected virtual void OnDragForeground(GameObject go, Vector2 delta)
 	{
 		if (UICamera.currentScheme == UICamera.ControlScheme.Controller) return;
 		mCam = UICamera.currentCamera;

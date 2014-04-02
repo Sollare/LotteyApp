@@ -476,6 +476,7 @@
      <Compile Include="Assets\NGUI\Scripts\UI\UIViewport.cs" />
      <Compile Include="Assets\Scripts\Extensions\DataExtensions.cs" />
      <Compile Include="Assets\Scripts\GUI\Bets\BetsController.cs" />
+     <Compile Include="Assets\Scripts\GUI\Lottery\Different\Instant\InstantLotterySlider.cs" />
      <Compile Include="Assets\Scripts\GUI\Lottery\Different\Lottery.cs" />
      <Compile Include="Assets\Scripts\GUI\Lottery\Different\LotteryItem.cs" />
      <Compile Include="Assets\Scripts\GUI\Lottery\Different\LotteryItemDetails.cs" />
@@ -490,6 +491,7 @@
      <Compile Include="Assets\Scripts\GUI\Lottery\Views\LotteryCommonInfoView.cs" />
      <Compile Include="Assets\Scripts\GUI\Lottery\Views\LotteryViewController.cs" />
      <Compile Include="Assets\Scripts\GUI\LotteryTimer.cs" />
+     <Compile Include="Assets\Scripts\GUI\Panels\OverScreenPanel.cs" />
      <Compile Include="Assets\Scripts\GUI\Rotator.cs" />
      <Compile Include="Assets\Scripts\GUI\Tickets\BuyButton.cs" />
      <Compile Include="Assets\Scripts\GUI\Tickets\DragDropTicket.cs" />
@@ -497,6 +499,7 @@
      <Compile Include="Assets\Scripts\GUI\Tickets\TicketsController.cs" />
      <Compile Include="Assets\Scripts\GUI\Tickets\TicketsGrid.cs" />
      <Compile Include="Assets\Scripts\GUI\Tickets\TicketsScrollView.cs" />
+     <Compile Include="Assets\Scripts\GUI\Wins\WinController.cs" />
      <Compile Include="Assets\Scripts\InstancePreloader.cs" />
      <Compile Include="Assets\Scripts\Model\TicketComparer.cs" />
      <Compile Include="Assets\Scripts\ServerModels\ResponseMessage.cs" />

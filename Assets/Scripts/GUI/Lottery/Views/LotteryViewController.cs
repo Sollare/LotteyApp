@@ -13,6 +13,22 @@ public class LotteryViewController : MonoBehaviour {
     public UIPanel CoverPanel;
     public UIWidget TabControl;
 
+    public OverScreenPanel OverScreen;
+
+
+    private static LotteryViewController _instance;
+
+    public static LotteryViewController instance
+    {
+        get
+        {
+            if (_instance == null)
+                _instance = GameObject.Find("LotteryController").GetComponent<LotteryViewController>();
+
+            return _instance;
+        }
+    }
+
     public static LotteryItem CurrentLotteryItem
     {
         get
@@ -24,11 +40,40 @@ public class LotteryViewController : MonoBehaviour {
     void Awake()
     {
         BetsController.instance.OnBetPerformed += BetPerformed;
+
+        WinController.instance.OnLotteryWinner += OnWin;
+        WinController.instance.OnLotteryLost += OnLost;
+    }
+
+    private void OnLost(object sender, Lottery lottery)
+    {
+        LotteryViewController.instance.OverScreen.SetResult(false);
+        LotteryViewController.instance.OverScreen.SetVisible(true);
+    }
+
+    private void OnWin(object sender, Lottery lottery)
+    {
+        LotteryViewController.instance.OverScreen.SetResult(true);
+        LotteryViewController.instance.OverScreen.SetVisible(true);
     }
 
     private void BetPerformed(object sender, Bet bet)
     {
-        ShowLotteryDetails();
+        if(CurrentLotteryItem.LoadLotteryOfType != LotteryData.LotteryType.Instant)
+            ShowLotteryDetails();
+        else
+        {
+            ShowLotteryNameInHeader(true);
+            EnableLotteriesScrollView(false);
+        }
+    }
+
+    public void ShowLotteryNameInHeader(bool value)
+    {
+        HeaderLotteryNameWidghet.cachedGameObject.SetActive(true);
+
+        TweenAlpha.Begin(HeaderTimerWidghet.cachedGameObject, 0.1f, value ? 0f : 1f);
+        TweenAlpha.Begin(HeaderLotteryNameWidghet.cachedGameObject, 0.3f, value ? 1f : 0f);
     }
 
     public void ShowLotteryDetails()
@@ -36,13 +81,8 @@ public class LotteryViewController : MonoBehaviour {
         DetailItem.UpdateInfo(CurrentLotteryItem.lotteryInstance);
         DetailItem.Show();
 
-        HeaderLotteryNameWidghet.cachedGameObject.SetActive(true);
-        TweenAlpha.Begin(HeaderTimerWidghet.cachedGameObject, 0.1f, 0f);
-        TweenAlpha.Begin(HeaderLotteryNameWidghet.cachedGameObject, 0.3f, 1f);
-
-        TweenAlpha.Begin(ChooseLotteryLabel.cachedGameObject, 0.1f, 0f);
-        TweenAlpha.Begin(LotteriesScrollView.instance.gameObject, 0.1f, 0f);
-
+        ShowLotteryNameInHeader(true);
+        EnableLotteriesScrollView(false);
         EnableTabControl(false);
     }
 
@@ -51,13 +91,17 @@ public class LotteryViewController : MonoBehaviour {
         DetailItem.Hide();
 
         TicketsDropContainer.AbortPreparation();
-        TweenAlpha.Begin(HeaderTimerWidghet.cachedGameObject, 0.1f, 1f);
-        TweenAlpha.Begin(HeaderLotteryNameWidghet.cachedGameObject, 0.3f, 0f);
+        ShowLotteryNameInHeader(false);
 
-        TweenAlpha.Begin(ChooseLotteryLabel.cachedGameObject, 0.1f, 1f);
-        TweenAlpha.Begin(LotteriesScrollView.instance.gameObject, 0.1f, 1f);
+        EnableLotteriesScrollView(true);
 
         EnableTabControl(true);
+    }
+
+    public void EnableLotteriesScrollView(bool show)
+    {
+        TweenAlpha.Begin(ChooseLotteryLabel.cachedGameObject, 0.1f, show ? 1f : 0f);
+        TweenAlpha.Begin(LotteriesScrollView.instance.gameObject, 0.1f, show ? 1f : 0f);
     }
 
     public void EnableCoverPanel(bool show)

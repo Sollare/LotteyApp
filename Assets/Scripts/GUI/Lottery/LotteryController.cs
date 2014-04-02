@@ -18,7 +18,6 @@ public class LotteryController : MonoBehaviour
     }
 
     private LotteryViewController _view;
-
     public LotteryViewController View
     {
         get
