@@ -118,9 +118,11 @@ public class UIGrid : UIWidgetContainer
 
 	protected virtual void Sort (List<Transform> list) { list.Sort(SortByName); }
 
-	/// <summary>
-	/// Recalculate the position of all elements within the grid, sorting them alphabetically if necessary.
-	/// </summary>
+    /// <summary>
+    /// Recalculate the position of all elements within the grid, sorting them alphabetically if necessary.
+    /// </summary>
+
+    public UIAnchor.Side side;
 
 	[ContextMenu("Execute")]
 	public virtual void Reposition ()
@@ -139,6 +141,8 @@ public class UIGrid : UIWidgetContainer
 		int x = 0;
 		int y = 0;
 
+	    float xOffset;
+
 		if (sorted)
 		{
 			List<Transform> list = new List<Transform>();
@@ -149,6 +153,8 @@ public class UIGrid : UIWidgetContainer
 				if (t && (!hideInactive || NGUITools.GetActive(t.gameObject))) list.Add(t);
 			}
 			Sort(list);
+
+		    xOffset = list.Count*cellWidth/2 - cellWidth/2;
 
 			for (int i = 0, imax = list.Count; i < imax; ++i)
 			{
@@ -161,11 +167,18 @@ public class UIGrid : UIWidgetContainer
 					new Vector3(cellWidth * x, -cellHeight * y, depth) :
 					new Vector3(cellWidth * y, -cellHeight * x, depth);
 
+			    if (side == UIAnchor.Side.Center)
+			        pos.x -= xOffset;
+
+			    if (side == UIAnchor.Side.Right)
+			        pos.x += xOffset;
+
 				if (animateSmoothly && Application.isPlaying)
 				{
 					SpringPosition.Begin(t.gameObject, pos, 15f).updateScrollView = true;
 				}
-				else t.localPosition = pos;
+				else 
+                    t.localPosition = pos;
 
 				if (++x >= maxPerLine && maxPerLine > 0)
 				{

@@ -11,10 +11,6 @@ public class LotteryDropContainer : MonoBehaviour
     // Нужен чтобы принимать события отрыва билета и т.п.
     public TicketsScrollView scrollView;
 
-    public UIPanel CoverPanel;
-    [Range(0f, 1f)]
-    public float CoverAlpha = 0.9f;
-
     private bool expanded = false;
     private DragDropTicket _waitingForTicket;
 
@@ -67,17 +63,19 @@ public class LotteryDropContainer : MonoBehaviour
 
     void Expand()
     {
-        var tweenScale = TweenScale.Begin(gameObject, Duration, new Vector3(1, HeightCoefficient, 1));
+        if (expanded) return;
 
-        //TweenAlpha.Begin(CoverPanel.gameObject, Duration, CoverAlpha);
+        LotteryController.instance.View.EnableCoverPanel(true);
 
         expanded = true;
     }
 
     void Squeeze()
     {
-        var tweenScale = TweenScale.Begin(gameObject, Duration, new Vector3(1, 1, 1));
-        //TweenAlpha.Begin(CoverPanel.gameObject, Duration, 0);
+        if (!expanded) return;
+
+        LotteryController.instance.View.EnableCoverPanel(false);
+
         expanded = false;
     }
     
@@ -89,11 +87,15 @@ public class LotteryDropContainer : MonoBehaviour
 
             if (hoveredObject == null)
             {
+                //Debug.Log("Waiting... object is null");
+
                 if (expanded)
                     Squeeze();
             }
             else
             {
+                //Debug.Log("Waiting... object is over: " + hoveredObject);
+
                 if (hoveredObject == this.gameObject && !expanded)
                     Expand();
 

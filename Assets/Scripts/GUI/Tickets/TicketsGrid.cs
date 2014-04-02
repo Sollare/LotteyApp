@@ -9,6 +9,8 @@ using System.Collections;
 
 public class TicketsGrid : UIGrid
 {
+    public List<DragDropTicket> Items = new List<DragDropTicket>();
+
     public delegate void TicketsGridUpdated(TicketsGrid grid);
 
     public event TicketsGridUpdated OnGridUpdated;
@@ -43,12 +45,10 @@ public class TicketsGrid : UIGrid
         }
     }
 
-    public List<DragDropTicket> Items = new List<DragDropTicket>();
-
 
     void Awake()
     {
-        cellHeight = TicketPlaceholder.instance.localSize.y;
+        cellHeight = TicketPlaceholder.instance.localSize.y - 10;
 
         _scrollView.OnTicketActivated += OnTicketActivated;
 
@@ -198,29 +198,21 @@ public class TicketsGrid : UIGrid
         Items.Clear();
     }
 
-    //void Sort()
-    //{
-    //    for (int i = 0; i < transform.childCount; i++)
-    //    {
-    //        var child = transform.GetChild(i);
-
-    //        if (child.name == "Z(Buy)") continue;
-
-    //        child.name = string.Format("_Ticket{0}", i);
-    //    }
-
-    //    Reposition();
-    //}
     void SortByTicketId()
     {
-        foreach (var ticket in Items)
-        {
-                ticket.collider.enabled = false;
+        int depth = 0;
 
-            ticket.name = string.Format("_Ticket({0})", ticket.ticketInstance.id.ToString("000"));
-        }
 
         Items = Items.OrderBy(t => t.ticketInstance.id).ToList();
+
+        foreach (var ticket in Items)
+        {
+            ticket.collider.enabled = false;
+
+            ticket.name = string.Format("_Ticket({0})", ticket.ticketInstance.id.ToString("000"));
+
+            ticket.BackgroundSprite.depth = depth++;
+        }
 
         if (Items.Count > 0)
             Items.First().collider.enabled = true;

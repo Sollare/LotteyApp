@@ -17,13 +17,13 @@ public class WWWOperations : MonoBehaviour
         get
         {
             if (_instance == null)
-                _instance = GameObject.Find("WWW").GetComponent<WWWOperations>();
+                _instance = GameObject.Find("_WWW").GetComponent<WWWOperations>();
 
             return _instance;
         }
     }
 
-    public string ServerUrl = @"http://sstucloud.no-ip.info/LotteyServerApp";
+    public string ServerUrl = @"http://webapi.no-ip.info/LotteyServerApp";
 
     void Start()
     {
@@ -72,6 +72,7 @@ public class WWWOperations : MonoBehaviour
         {
             if (instance.showDebug)
                 Debug.LogWarning("Fetch error: " + www.error);
+
             callback(default(T), www.error);
             //callback(default(T), www.error);
         }

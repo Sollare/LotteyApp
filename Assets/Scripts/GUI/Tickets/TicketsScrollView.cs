@@ -29,14 +29,14 @@ namespace Assets.Scripts.GUI
         
         protected virtual void CallTicketPulled(DragDropTicket ticket)
         {
-            //Debug.Log(GetType().Name + ": Потащили билет " + ticket.ticketInstance.id);
+            Debug.Log(GetType().Name + ": Потащили билет " + ticket.ticketInstance.id);
 
             TicketViewPulled handler = OnTicketPulled;
             if (handler != null) handler(ticket);
         }
         protected virtual void CallTicketReturned(DragDropTicket ticket)
         {
-            //Debug.Log(GetType().Name + ": Вернули билет " + ticket.ticketInstance.id);
+            Debug.Log(GetType().Name + ": Вернули билет " + ticket.ticketInstance.id);
 
             TicketViewReturned handler = OnTicketReturned;
             if (handler != null) handler(ticket);
@@ -44,7 +44,7 @@ namespace Assets.Scripts.GUI
 
         protected virtual void CallTicketActivated(DragDropTicket ticket, LotteryItem item)
         {
-            //Debug.Log(GetType().Name + ": Активировали билет " + ticket.ticketInstance.id);
+            Debug.Log(GetType().Name + ": Активировали билет " + ticket.ticketInstance.id);
 
             TicketViewActivated handler = OnTicketActivated;
             if (handler != null) handler(ticket, LotteriesScrollView.instance.currentItem);
@@ -62,13 +62,11 @@ namespace Assets.Scripts.GUI
             this.OnTicketActivated += TicketsController.instance.OnTicketViewActivated;
 
             grid.OnGridUpdated += OnGridUpdated;
-            // TODO: КОСТЫЛЬ!!!
-            //TicketsController.instance.Initialize();
         }
 
         private void OnGridUpdated(TicketsGrid grid)
         {
-            panel.bottomAnchor.absolute = -(grid.Items.Count()) * (int)TicketPlaceholder.instance.localSize.y;
+            panel.bottomAnchor.absolute = (int) -(grid.Items.Count() + 0.5) * (int)TicketPlaceholder.instance.localSize.y;
         }
 
         private Vector3 move;

@@ -35,7 +35,7 @@ public class SessionController : MonoBehaviour
         get
         {
             if (_instance == null)
-                _instance = GameObject.Find("WWW").GetComponent<SessionController>();
+                _instance = GameObject.Find("_WWW").GetComponent<SessionController>();
 
             return _instance;
         }
@@ -52,7 +52,7 @@ public class SessionController : MonoBehaviour
 
     void Start()
     {
-        Invoke("DelayedLogIn", 3f);   
+        Invoke("DelayedLogIn", 1f);   
     }
 
     void DelayedLogIn()

@@ -4,6 +4,8 @@ using System.Collections;
 
 public class DragDropTicket : UIDragDropItem
 {
+    public UISprite BackgroundSprite;
+
     public Ticket ticketInstance;
 
     private UIWidget _widget;
@@ -37,6 +39,7 @@ public class DragDropTicket : UIDragDropItem
         TicketViewActivated handler = OnTicketActivated;
         if (handler != null) handler(ticket, LotteriesScrollView.instance.currentItem);
 
+        Debug.Log("Removing ticket");
         TicketsController.instance.Model.RemoveTicket(ticketInstance);
 
         //TicketsController.instance.Model.AddTicket(Ticket.NewTicket());
@@ -91,10 +94,14 @@ public class DragDropTicket : UIDragDropItem
 
     protected override void OnDragDropRelease(GameObject surface)
     {
-        base.OnDragDropRelease(surface);
-
-        if (UICamera.currentTouch == null || UICamera.currentTouch.pressed == null)
+        if (UICamera.currentTouch == null || UICamera.currentTouch.pressed == null || surface == null)
+        {
             TicketReturned(this);
+            base.OnDragDropRelease(surface);
+            return;
+        }
+
+        base.OnDragDropRelease(surface);
 
         if (surface)
         {

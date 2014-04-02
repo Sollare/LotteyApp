@@ -35,7 +35,7 @@ public class LotteryTimer : MonoBehaviour
 
     public void SetExpirationTime(double expirationDate)
     {
-        Debug.Log("new time" + expirationDate);
+        //Debug.Log("new time" + expirationDate);
         totalSecondsLeft = Math.Round(expirationDate);
     }
 

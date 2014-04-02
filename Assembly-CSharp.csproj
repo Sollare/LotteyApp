@@ -479,10 +479,13 @@
      <Compile Include="Assets\Scripts\GUI\Lottery\Different\Lottery.cs" />
      <Compile Include="Assets\Scripts\GUI\Lottery\Different\LotteryItem.cs" />
      <Compile Include="Assets\Scripts\GUI\Lottery\Different\LotteryItemDetails.cs" />
+     <Compile Include="Assets\Scripts\GUI\Lottery\Different\LotteryItemInstant.cs" />
+     <Compile Include="Assets\Scripts\GUI\Lottery\Different\LotteryItemRegular.cs" />
      <Compile Include="Assets\Scripts\GUI\Lottery\LotteriesScrollView.cs" />
      <Compile Include="Assets\Scripts\GUI\Lottery\LotteryController.cs" />
      <Compile Include="Assets\Scripts\GUI\Lottery\LotteryDropContainer.cs" />
      <Compile Include="Assets\Scripts\GUI\Lottery\LotteryModel.cs" />
+     <Compile Include="Assets\Scripts\GUI\Lottery\LotteryTabControl.cs" />
      <Compile Include="Assets\Scripts\GUI\Lottery\Views\LotteryBetViewController.cs" />
      <Compile Include="Assets\Scripts\GUI\Lottery\Views\LotteryCommonInfoView.cs" />
      <Compile Include="Assets\Scripts\GUI\Lottery\Views\LotteryViewController.cs" />

@@ -69,6 +69,8 @@ public class LotteryItem : MonoBehaviour
 
     private void SessionStarted(User user)
     {
+        if (LoadLotteryOfType == LotteryData.LotteryType.Instant) return;
+
         fetchRepeatRate = 10;
         ShowLoadingScreen(true);
         StartCoroutine("AuhorizedLotteryDataFetch", fetchRepeatRate);
