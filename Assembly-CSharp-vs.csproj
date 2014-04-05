@@ -491,6 +491,7 @@
      <Compile Include="Assets\Scripts\GUI\Lottery\Views\LotteryCommonInfoView.cs" />
      <Compile Include="Assets\Scripts\GUI\Lottery\Views\LotteryViewController.cs" />
      <Compile Include="Assets\Scripts\GUI\LotteryTimer.cs" />
+     <Compile Include="Assets\Scripts\GUI\Panels\HelpPanel.cs" />
      <Compile Include="Assets\Scripts\GUI\Panels\OverScreenPanel.cs" />
      <Compile Include="Assets\Scripts\GUI\Rotator.cs" />
      <Compile Include="Assets\Scripts\GUI\Tickets\BuyButton.cs" />
