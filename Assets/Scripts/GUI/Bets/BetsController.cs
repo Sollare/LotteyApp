@@ -1,5 +1,6 @@
 ﻿using System;
 using LotteyServerApp.Models;
+using Newtonsoft.Json;
 using UnityEngine;
 using System.Collections;
 
@@ -8,7 +9,7 @@ public class BetsController : MonoBehaviour
     public event EventHandler<Bet> OnBetPerformed;
     public event EventHandler<ResponseMessage> OnBetFailed;
 
-    protected virtual void BetPerformed(Bet e)
+    public virtual void BetPerformed(Bet e)
     {
         EventHandler<Bet> handler = OnBetPerformed;
         if (handler != null) handler(this, e);
@@ -40,7 +41,25 @@ public class BetsController : MonoBehaviour
     private void OnTicketViewActivated(DragDropTicket ticket, LotteryItem item)
     {
         Debug.Log("Ticket " + ticket.ticketInstance.id + " activated on lottery " + item.lotteryInstance.id);
-        BetPerformed(new Bet() { drawingId = item.lotteryInstance.id, id = ticket.ticketInstance.id});
+        
+        ConfirmPanel.ShowConfirmDialog("Are you sure you want bet on " + item.lotteryInstance.name + "?", 
+        delegate
+        {
+            var mBet = new Bet() { drawingId = item.lotteryInstance.id, id = ticket.ticketInstance.id };
+            var mTicket = ticket.ticketInstance;
+            BetPerformed(new Bet(mBet.id, mTicket.id, mBet.drawingId));
+
+            //PerformBet(ticket.ticketInstance, item.lotteryInstance,
+            //    delegate(ResponseMessage fetchedObject, string error)
+            //    {
+                    
+            //    });
+        },
+            delegate
+            {
+                ticket.TicketReturned(ticket);
+                //TicketsController.instance.ca
+            });
     }
 
     /// <summary>
@@ -48,7 +67,7 @@ public class BetsController : MonoBehaviour
     /// </summary>
     /// <param name="ticket">Билет</param>
     /// <param name="lottery">Лотерея</param>
-    public void PerformBet(Ticket ticket, Lottery lottery, WWWOperations.OnObjectFecthed<ResponseMessage> callback)
+    public void PerformBet(Ticket ticket, LotteryData lottery, WWWOperations.OnObjectFecthed<ResponseMessage> callback)
     {
         WWWOperations.instance.FetchJsonObject<ResponseMessage>(GetUrlStringForBet(ticket, lottery), callback, BetChainedCallback);
     }
@@ -67,8 +86,9 @@ public class BetsController : MonoBehaviour
             }
             else
             {
-                string[] split = fetchedData.Message.Split('/');
-                Bet bet = new Bet {drawingId = int.Parse(split[0]), id = int.Parse(split[1])};
+                //string[] split = fetchedData.Message.Split('/');
+                var serialziedBet = fetchedData.Message;
+                Bet bet = JsonConvert.DeserializeObject<Bet>(serialziedBet);
 
                 BetPerformed(bet);
             }
@@ -77,15 +97,37 @@ public class BetsController : MonoBehaviour
         callback(fetchedData, error);
     }
 
-    private static string GetUrlStringForBet(Ticket ticket, Lottery lottery)
+    private static string GetUrlStringForBet(Ticket ticket, LotteryData lottery)
     {
-        return string.Format("{0}/Bets/Bet/{1}?ticketId={2}", WWWOperations.instance.ServerUrl, lottery.Data.id,
+        return string.Format("{0}/Bets/Bet/{1}?ticketId={2}", WWWOperations.instance.ServerUrl, lottery.id,
             ticket.id);
     }
 }
 
+//public class BetInfo : EventArgs
+//{
+//    public Bet Bet;
+//    public Ticket Ticket;
+
+//    public BetInfo(Bet bet, Ticket ticket)
+//    {
+//        Bet = bet;
+//        Ticket = ticket;
+//    }
+//}
+
 public class Bet : EventArgs
 {
     public int id;
+    public int ticketId;
     public int drawingId;
+
+    public Bet() {}
+
+    public Bet(int Id, int TicketId, int DrawingId)
+    {
+        id = Id;
+        ticketId = TicketId;
+        drawingId = DrawingId;
+    }
 }

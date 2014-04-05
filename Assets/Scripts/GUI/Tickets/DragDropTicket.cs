@@ -22,7 +22,7 @@ public class DragDropTicket : UIDragDropItem
     public event TicketViewReturned OnTicketReturned;
     public event TicketViewActivated OnTicketActivated;
 
-    protected virtual void TicketReturned(DragDropTicket ticket)
+    public virtual void TicketReturned(DragDropTicket ticket)
     {
         enabled = false;
         collider.enabled = true;
@@ -40,12 +40,13 @@ public class DragDropTicket : UIDragDropItem
         if (handler != null) handler(ticket, LotteriesScrollView.instance.currentItem);
 
         Debug.Log("Removing ticket");
-        TicketsController.instance.Model.RemoveTicket(ticketInstance);
+        //TicketsController.instance.Model.RemoveTicket(ticketInstance);
 
         //TicketsController.instance.Model.AddTicket(Ticket.NewTicket());
         //TicketsController.instance.Model.AddTicket(Ticket.NewTicket());
         //Destroy(gameObject);
     }
+
 
     private TicketsScrollView _scrollView;
     private TicketsGrid _grid;

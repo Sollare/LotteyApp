@@ -32,7 +32,6 @@ public class LotteryCommonInfoView : MonoBehaviour {
 
     private void ItemChanged(LotteryItem newItem)
     {
-        Debug.Log(newItem);
         UpdateHeader(newItem);
     }
 
@@ -44,18 +43,18 @@ public class LotteryCommonInfoView : MonoBehaviour {
 
         //Debug.Log("New Target: " + selectedItem.name);
 
-        //if (selectedItem.lotteryInstance.type == LotteryData.LotteryType.Instant)
-        //    SetLotteryInfoPanelVisible(false);
-        //else
-        //    SetLotteryInfoPanelVisible(true);
+        if (selectedItem.lotteryInstance.type == LotteryData.LotteryType.Instant)
+            SetLotteryInfoPanelVisible(false);
+        else
+            SetLotteryInfoPanelVisible(true);
 
-        MainLotteryTimer.SetExpirationTime(selectedItem.lotteryInstance.expiration);
+        MainLotteryTimer.SetExpirationTime(selectedItem.lotteryInstance.id);
         MainLotteryTimer.StartTimer();
     }
 
-    //void SetLotteryInfoPanelVisible(bool value)
-    //{
-    //    var alphaValue = value ? 1f : 0f;
-    //    TweenAlpha.Begin(LotteryInfoWidget.gameObject, 0.25f, alphaValue);
-    //}
+    void SetLotteryInfoPanelVisible(bool value)
+    {
+        var alphaValue = value ? 1f : 0f;
+        TweenAlpha.Begin(LotteryInfoWidget.gameObject, 0.25f, alphaValue);
+    }
 }

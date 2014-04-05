@@ -38,7 +38,7 @@ public class TicketsController
     /// </summary>
     public TicketViewActivated OnTicketViewActivated;
 
-    public virtual void CallTicketActivated(DragDropTicket ticket, LotteryItem item)
+    public virtual void CallTicketViewActivated(DragDropTicket ticket, LotteryItem item)
     {
         TicketViewActivated handler = OnTicketViewActivated;
         if (handler != null) handler(ticket, item);
@@ -69,8 +69,22 @@ public class TicketsController
         SessionController.instance.SessionStarted += OnSessionStarted;
         SessionController.instance.SessionEnded += OnSessionEnded;
 
+        BetsController.instance.OnBetPerformed += OnBetPerformed;
+
         Model = new TicketData(this, 5);
         CallTicketsModelLoaded(Model);
+    }
+
+    private void OnBetPerformed(object sender, Bet betInfo)
+    {
+        var ticket = Model.GetTicket(betInfo.ticketId);
+
+        if (ticket != null)
+        {
+            TicketsController.instance.Model.RemoveTicket(ticket);
+            Debug.Log("Ticket with number " + ticket.id + " is already in collection");
+            Model.RemoveTicket(ticket);
+        }
     }
 
     private void OnSessionEnded(User user)
@@ -84,8 +98,6 @@ public class TicketsController
         Model = new TicketData(this, user.freeTickets);
         CallTicketsModelLoaded(Model);
     }
-
-
 }
 
 [Serializable]

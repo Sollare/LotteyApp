@@ -55,6 +55,13 @@ public class TicketsGrid : UIGrid
         TicketsController.instance.OnTicketsModelLoaded += ModelInitialized;
         TicketsController.instance.OnTicketsAdded += TicketsAdded;
         TicketsController.instance.OnTicketsRemoved += TicketsRemoved;
+
+        BetsController.instance.OnBetPerformed += BetPerformed;
+    }
+
+    private void BetPerformed(object sender, Bet bet)
+    {
+        InsertTicketIfAvailiable();
     }
 
     private void TicketsRemoved(IEnumerable<Ticket> tickets)
@@ -218,5 +225,21 @@ public class TicketsGrid : UIGrid
             Items.First().collider.enabled = true;
 
         Reposition();
+    }
+
+    // Вставить билеты в коллекцию, если доступны
+    void InsertTicketIfAvailiable()
+    {
+        // Если есть свободные
+        if (Items.Count < maxTicketViewsAmount)
+        {
+            var allTickets = TicketsController.instance.Model.Tickets;
+            var ticketsInGrid = Items.Select(item => item.ticketInstance);
+
+            var newTicket = allTickets.First(t => !ticketsInGrid.Contains(t));
+
+            if(newTicket != null)
+                AddGridElement(newTicket);
+        }
     }
 }

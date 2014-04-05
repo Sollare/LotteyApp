@@ -15,6 +15,7 @@ public class LotteryViewController : MonoBehaviour {
 
     public OverScreenPanel OverScreen;
 
+    public ConfirmPanel ConfirmPanel;
 
     private static LotteryViewController _instance;
 

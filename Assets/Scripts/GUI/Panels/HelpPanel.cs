@@ -33,21 +33,18 @@ public class HelpPanel : MonoBehaviour
         SetVisible(true);
     }
 
-    void Update()
-    {
-    }
-
     public void SetVisible(bool show)
     {
         if (show == visible) return;
 
         ticketArrow.enabled = show;
         visible = show;
-
-        var firstTicket = grid.FirstTicket;
         
         if (show)
         {
+
+            var firstTicket = grid.FirstTicket;
+
             if (firstTicket)
             {
                 ticketLabel.text = "Drag the selected ticket in the lottery field";
@@ -55,7 +52,7 @@ public class HelpPanel : MonoBehaviour
             }
             else
             {
-                ticketLabel.text = "You have no tickets.\nBuy it!";
+                ticketLabel.text = "You have no tickets.\nBuy the one!";
                 ticketSilouette.cachedTransform.position = buyTicket.cachedTransform.position;
             }
 

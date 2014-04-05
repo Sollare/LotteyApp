@@ -38,7 +38,6 @@ public class LotteryDropContainer : MonoBehaviour
 
         if(UICamera.current != null)
             UICamera.currentTouch.current = this.gameObject;
-
     }
 
     private void TicketReturned(DragDropTicket ticket)

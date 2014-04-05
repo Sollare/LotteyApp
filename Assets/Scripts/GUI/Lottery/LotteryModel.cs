@@ -45,14 +45,14 @@ public class LotteryModel
 
     public int LotteriesCount
     {
-        get { return _lotteries.Count; }
+        get { return _lotteries.Count(); }
     }
 
-    public IEnumerator<Lottery> Lotteries
+    public IEnumerable<Lottery> Lotteries
     {
         get
         {
-            return _lotteries.GetEnumerator();
+            return _lotteries;
         }
     }
 
@@ -95,22 +95,6 @@ public class LotteryModel
 
         callback(fetchedData, error);
     }
-
-
-
-    //private void FetchLotteryCallback(LotteryData fetchedData, string error)
-    //{
-    //    var addResult = AddLottery(fetchedData);
-    //    if (addResult != null)
-    //    {
-    //        CallLotteryLoaded(addResult);
-    //    }
-    //    else
-    //    {
-    //        var updatedLottery = UpdateExistingLottery(fetchedData);
-    //        CallLotteryUpdated(updatedLottery);
-    //    }
-    //}
 
     private Lottery AddLottery(LotteryData lotteryData)
     {

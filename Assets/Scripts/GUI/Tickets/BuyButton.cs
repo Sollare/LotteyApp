@@ -5,6 +5,11 @@ public class BuyButton : MonoBehaviour {
 
     public void BuyTickets()
     {
-        TicketsController.instance.Model.AddTicket(Ticket.NewTicket());
+        ConfirmPanel.ShowConfirmDialog("Buy 5 tickets for 0.99$?", delegate
+        {
+            for(int i = 0; i < 5; i++)
+                TicketsController.instance.Model.AddTicket(Ticket.NewTicket());
+        });
+        //TicketsController.instance.Model.AddTicket(Ticket.NewTicket());
     }
 }

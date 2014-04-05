@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using System.Collections;
 
@@ -25,19 +26,25 @@ public class LotteryTimer : MonoBehaviour
     }
 
     public UILabel label;
-
     public bool updateLabel;
-
-    private double totalSecondsLeft = -1;
     
-    public const string EmptyTimerString = "--:--:--";
+    private LotteryData currentLottery;
+    private int currentLotteryId;
+    
+    public const string EmptyTimerString = "00:00:00";
     private string resultString = EmptyTimerString;
 
-    public void SetExpirationTime(double expirationDate)
+    public void SetExpirationTime(int lotteryId)
     {
-        //Debug.Log("new time" + expirationDate);
-        totalSecondsLeft = Math.Round(expirationDate);
+        currentLotteryId = lotteryId;
+
+        Lottery lottery = LotteryController.instance.Model.Lotteries.FirstOrDefault(lotteryOne => lotteryOne.Data.id == lotteryId);
+
+        if(lottery != null)
+            currentLottery = lottery.Data;
     }
+
+    private 
 
     void Awake()
     {
@@ -58,11 +65,9 @@ public class LotteryTimer : MonoBehaviour
 
     IEnumerator EnumeratorStartTimer()
     {
-        while (totalSecondsLeft > 0)
+        while (currentLottery.expiration > 0)
         {
             resultString = GetFormatString();
-
-            Debug.Log(resultString);
 
             if (updateLabel && label)
                 label.text = resultString;
@@ -71,37 +76,36 @@ public class LotteryTimer : MonoBehaviour
 
             yield return new WaitForSeconds(1f);
 
-            totalSecondsLeft--;
-            //_timeSpan = _timeSpan.Value.Subtract(_secondSpan);
+
+            foreach (var lottery in LotteryController.instance.Model.Lotteries)
+            {
+                lottery.Data.expiration--;
+            }
         }
     }
 
     private string GetFormatString()
     {
-        if (totalSecondsLeft < 0) return EmptyTimerString;
+        if (currentLottery.expiration < 0) return EmptyTimerString;
         //HOURS
 
-        //double hours = secondsToHours(totalSecondsLeft);
-        //double minutes = secondsToMins(totalSecondsLeft);
-        //double seconds = totalSecondsLeft%60;
-
-        double totalHoursOnline = Convert.ToDouble(totalSecondsLeft)/(double) 3600;
+        double totalHoursOnline = Convert.ToDouble(currentLottery.expiration) / (double)3600;
         double totalMinutesOnline = 0;
         double totalSecondsOnline = 0;
 
-        if (Math.Abs(totalSecondsLeft%3600) > 0.01f)
+        if (Math.Abs(currentLottery.expiration % 3600) > 0.01f)
         {
             totalMinutesOnline = (totalHoursOnline - Math.Floor(totalHoursOnline)) * 60;
             totalHoursOnline = Math.Floor(Convert.ToDouble(totalHoursOnline));
         }
         else
         {
-            totalHoursOnline = totalSecondsLeft/3600;
+            totalHoursOnline = currentLottery.expiration / 3600;
         }
+
         if (Math.Abs(totalMinutesOnline%60) > 0.01f)
         {
             totalSecondsOnline = (totalMinutesOnline - Math.Floor(totalMinutesOnline))*60;
-                //(totalMinutesOnline – Math.Floor(totalMinutesOnline)) *60;
             totalMinutesOnline = Math.Floor(Convert.ToDouble(totalMinutesOnline));
         }
 
@@ -109,6 +113,7 @@ public class LotteryTimer : MonoBehaviour
             totalHoursOnline.ToString("00"),
             totalMinutesOnline.ToString("00"),
             totalSecondsOnline.ToString("00"));
+
 
         return str;
     }
