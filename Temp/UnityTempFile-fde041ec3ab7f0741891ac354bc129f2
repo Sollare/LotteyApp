@@ -482,6 +482,7 @@ Assets/Scripts/GUI/Lottery/Views/LotteryBetViewController.cs
 Assets/Scripts/GUI/Lottery/Views/LotteryCommonInfoView.cs
 Assets/Scripts/GUI/Lottery/Views/LotteryViewController.cs
 Assets/Scripts/GUI/LotteryTimer.cs
+Assets/Scripts/GUI/Panels/ConfirmPanel.cs
 Assets/Scripts/GUI/Panels/HelpPanel.cs
 Assets/Scripts/GUI/Panels/OverScreenPanel.cs
 Assets/Scripts/GUI/Rotator.cs

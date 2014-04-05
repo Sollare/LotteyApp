@@ -81,8 +81,8 @@ public class TicketsController
 
         if (ticket != null)
         {
-            TicketsController.instance.Model.RemoveTicket(ticket);
-            Debug.Log("Ticket with number " + ticket.id + " is already in collection");
+            //TicketsController.instance.Model.RemoveTicket(ticket);
+            Debug.Log("Removing ticket " + ticket.id);
             Model.RemoveTicket(ticket);
         }
     }

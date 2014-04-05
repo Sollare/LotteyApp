@@ -52,7 +52,7 @@ public class HelpPanel : MonoBehaviour
             }
             else
             {
-                ticketLabel.text = "You have no tickets.\nBuy the one!";
+                ticketLabel.text = "You have no tickets.\nBuy one!";
                 ticketSilouette.cachedTransform.position = buyTicket.cachedTransform.position;
             }
 

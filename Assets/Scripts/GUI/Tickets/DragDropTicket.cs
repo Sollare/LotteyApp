@@ -39,7 +39,7 @@ public class DragDropTicket : UIDragDropItem
         TicketViewActivated handler = OnTicketActivated;
         if (handler != null) handler(ticket, LotteriesScrollView.instance.currentItem);
 
-        Debug.Log("Removing ticket");
+        //Debug.Log("Removing ticket");
         //TicketsController.instance.Model.RemoveTicket(ticketInstance);
 
         //TicketsController.instance.Model.AddTicket(Ticket.NewTicket());
@@ -97,10 +97,12 @@ public class DragDropTicket : UIDragDropItem
     {
         if (UICamera.currentTouch == null || UICamera.currentTouch.pressed == null || surface == null)
         {
+            Debug.Log("Возврат т.к. ни на что не нажали");
             TicketReturned(this);
             base.OnDragDropRelease(surface);
             return;
         }
+
 
         base.OnDragDropRelease(surface);
 
@@ -110,10 +112,6 @@ public class DragDropTicket : UIDragDropItem
             {
                 TicketActivated(this);
             }
-        }
-        else
-        {
-            TicketReturned(this);
         }
     }
 }

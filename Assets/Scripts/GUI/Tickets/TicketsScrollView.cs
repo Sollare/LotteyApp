@@ -36,7 +36,7 @@ namespace Assets.Scripts.GUI
         }
         protected virtual void CallTicketReturned(DragDropTicket ticket)
         {
-            //Debug.Log(GetType().Name + ": Вернули билет " + ticket.ticketInstance.id);
+            Debug.Log(GetType().Name + ": Вернули билет " + ticket.ticketInstance.id);
 
             TicketViewReturned handler = OnTicketReturned;
             if (handler != null) handler(ticket);

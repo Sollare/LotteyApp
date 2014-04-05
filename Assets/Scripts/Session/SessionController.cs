@@ -155,7 +155,7 @@ public class SessionController : MonoBehaviour
         }
 
         _currentUser = fetchedObject;
-        Debug.Log(fetchedObject.ToString());
+        //Debug.Log(fetchedObject.ToString());
 
         OnSessionStarted(_currentUser);
     }

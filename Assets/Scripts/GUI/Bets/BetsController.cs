@@ -42,7 +42,7 @@ public class BetsController : MonoBehaviour
     {
         Debug.Log("Ticket " + ticket.ticketInstance.id + " activated on lottery " + item.lotteryInstance.id);
         
-        ConfirmPanel.ShowConfirmDialog("Are you sure you want bet on " + item.lotteryInstance.name + "?", 
+        ConfirmPanel.ShowConfirmDialog("Do you want to make a bet on " + item.lotteryInstance.name + "?", 
         delegate
         {
             var mBet = new Bet() { drawingId = item.lotteryInstance.id, id = ticket.ticketInstance.id };
@@ -58,7 +58,6 @@ public class BetsController : MonoBehaviour
             delegate
             {
                 ticket.TicketReturned(ticket);
-                //TicketsController.instance.ca
             });
     }
 

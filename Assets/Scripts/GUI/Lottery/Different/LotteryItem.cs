@@ -162,7 +162,7 @@ public class LotteryItem : MonoBehaviour
             if (lotteryInstance == null)
             {
                 lotteryInstance = fetchedObject;
-                Debug.Log("Complete update");
+                //Debug.Log("Complete update");
             }
             else
             {
@@ -170,7 +170,7 @@ public class LotteryItem : MonoBehaviour
                 lotteryInstance.MyBets = fetchedObject.MyBets;
             }
 
-            Debug.Log("Bets: " + fetchedObject.MyBets.Length);
+            //Debug.Log("Bets: " + fetchedObject.MyBets.Length);
 
             UpdateView(lotteryInstance);
 

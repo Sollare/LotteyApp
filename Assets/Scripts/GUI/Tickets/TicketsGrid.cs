@@ -51,6 +51,7 @@ public class TicketsGrid : UIGrid
         cellHeight = TicketPlaceholder.instance.localSize.y - 10;
 
         _scrollView.OnTicketActivated += OnTicketActivated;
+        _scrollView.OnTicketReturned += OnTicketReturned;
 
         TicketsController.instance.OnTicketsModelLoaded += ModelInitialized;
         TicketsController.instance.OnTicketsAdded += TicketsAdded;
@@ -61,7 +62,14 @@ public class TicketsGrid : UIGrid
 
     private void BetPerformed(object sender, Bet bet)
     {
+        //var ticket = TicketsController.instance.Model.GetTicket(bet.ticketId);
+
+        //if(ticket != null)
+        //    RemoveGridElement(ticket);
+        
+        Debug.Log("Попытка вставить билет если есть");
         InsertTicketIfAvailiable();
+        SortByTicketId();
     }
 
     private void TicketsRemoved(IEnumerable<Ticket> tickets)
@@ -96,9 +104,16 @@ public class TicketsGrid : UIGrid
 
     private void OnTicketActivated(DragDropTicket ticket, LotteryItem item)
     {
-        RemoveGridElement(ticket);
+        //RemoveGridElement(ticket);
+        ticket.gameObject.SetActive(false);
 
         GridUpdated(this);
+    }
+
+    private void OnTicketReturned(DragDropTicket ticket)
+    {
+        ticket.gameObject.SetActive(true);
+        Reposition();
     }
 
     public void InsertTickets(IEnumerable<Ticket> tickets, int at = 0)
@@ -234,9 +249,10 @@ public class TicketsGrid : UIGrid
         if (Items.Count < maxTicketViewsAmount)
         {
             var allTickets = TicketsController.instance.Model.Tickets;
+            
             var ticketsInGrid = Items.Select(item => item.ticketInstance);
 
-            var newTicket = allTickets.First(t => !ticketsInGrid.Contains(t));
+            var newTicket = allTickets.FirstOrDefault(t => !ticketsInGrid.Contains(t));
 
             if(newTicket != null)
                 AddGridElement(newTicket);

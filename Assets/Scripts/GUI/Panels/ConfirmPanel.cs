@@ -39,9 +39,6 @@ public class ConfirmPanel : MonoBehaviour
 
     public void Close()
     {
-        if (cancelCallback != null)
-            cancelCallback();
-
         panel.alpha = 1f;
         instance.callback = null;
 
@@ -52,6 +49,14 @@ public class ConfirmPanel : MonoBehaviour
         {
             gameObject.SetActive(false);
         }));
+    }
+
+    public void CloseWithCallback()
+    {
+        if (cancelCallback != null)
+            cancelCallback();
+
+        Close();
     }
 
     public void Confirm()
