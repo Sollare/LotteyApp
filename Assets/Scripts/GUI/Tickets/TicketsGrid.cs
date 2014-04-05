@@ -62,12 +62,6 @@ public class TicketsGrid : UIGrid
 
     private void BetPerformed(object sender, Bet bet)
     {
-        //var ticket = TicketsController.instance.Model.GetTicket(bet.ticketId);
-
-        //if(ticket != null)
-        //    RemoveGridElement(ticket);
-        
-        Debug.Log("Попытка вставить билет если есть");
         InsertTicketIfAvailiable();
         SortByTicketId();
     }

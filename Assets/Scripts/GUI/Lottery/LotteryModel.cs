@@ -70,30 +70,18 @@ public class LotteryModel
     public LotteryModel()
     {
         _lotteries = new List<Lottery>();
+        BetsController.instance.OnBetPerformed += BetPerformed;
     }
 
-    public void FetchLottery(LotteryData.LotteryType lotteryType, WWWOperations.OnObjectFecthed<LotteryData> callback)
-    {
-        // Связанный коллбэк для того, чтобы сначала обработать здесь, а затем уже принять
-        WWWOperations.instance.FetchJsonObject<LotteryData>(GetUrlStringForLottery(lotteryType), callback, FetLotteryChainedCallback);
-    }
 
-    private void FetLotteryChainedCallback(LotteryData fetchedData, string error, WWWOperations.OnObjectFecthed<LotteryData> callback)
-    {
-        var addResult = AddLottery(fetchedData);
-        if (addResult != null)
-        {
-            CallLotteryLoaded(addResult);
-        }
-        else
-        {
-            var updatedLottery = UpdateExistingLottery(fetchedData);
-            
-            if(updatedLottery != null)
-                CallLotteryUpdated(updatedLottery);
-        }
+    //~LotteryModel()
+    //{
+    //    BetsController.instance.OnBetPerformed -= BetPerformed;
+    //}
 
-        callback(fetchedData, error);
+    public Lottery GetLottery(int lotteryId)
+    {
+        return _lotteries.FirstOrDefault(l => l.Data.id == lotteryId);
     }
 
     private Lottery AddLottery(LotteryData lotteryData)
@@ -126,6 +114,22 @@ public class LotteryModel
         }
     }
 
+    private void BetPerformed(object sender, Bet bet)
+    {
+        var lottery = GetLottery(bet.drawingId);
+
+        if (lottery != null)
+        {
+            FetchLottery(lottery.Data.type, null);
+            //var list = lottery.Data.MyBets.ToList();
+            //list.Add(bet);
+
+            //lottery.Data.MyBets = list.ToArray();
+
+            //CallLotteryUpdated(lottery);
+        }
+    }
+
     private Lottery UpdateExistingLottery(LotteryData lotteryData)
     {
         if (lotteryData == null) return null;
@@ -134,7 +138,12 @@ public class LotteryModel
 
         if (existingLottery != null)
         {
-            existingLottery.Data = lotteryData;
+            existingLottery.Data.expiration = lotteryData.expiration;
+            existingLottery.Data.name = lotteryData.name;
+            existingLottery.Data.totalmoney = lotteryData.totalmoney;
+            existingLottery.Data.type = lotteryData.type;
+            existingLottery.Data.MyBets = lotteryData.MyBets;
+
             return existingLottery;
         }
         else
@@ -142,6 +151,35 @@ public class LotteryModel
             Debug.Log(string.Format("Не найдена лотерея с указанным ID: {0} и типом: {1}", lotteryData.id, lotteryData.type));
             return null;
         }
+    }
+
+    public void FetchLottery(LotteryData.LotteryType lotteryType, WWWOperations.OnObjectFecthed<LotteryData> callback)
+    {
+        // Связанный коллбэк для того, чтобы сначала обработать здесь, а затем уже принять
+        WWWOperations.instance.FetchJsonObject<LotteryData>(GetUrlStringForLottery(lotteryType), callback, FetchLotteryChainedCallback);
+    }
+
+    private void FetchLotteryChainedCallback(LotteryData fetchedData, string error, WWWOperations.OnObjectFecthed<LotteryData> callback)
+    {
+        var addResult = AddLottery(fetchedData);
+        if (addResult != null)
+        {
+            CallLotteryLoaded(addResult);
+        }
+        else
+        {
+            var updatedLottery = UpdateExistingLottery(fetchedData);
+
+            if (updatedLottery != null)
+                CallLotteryUpdated(updatedLottery);
+            else
+            {
+                Debug.LogError("Не удалось обновить лотерею");
+            }
+        }
+
+        if(callback != null)
+            callback(fetchedData, error);
     }
 
     private static string GetUrlStringForLottery(LotteryData.LotteryType lotteryType)

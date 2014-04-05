@@ -48,8 +48,9 @@ public class LotteryItem : MonoBehaviour
             lotteryInstance = new LotteryData {type = LotteryData.LotteryType.Instant, id = -1, name = "Instant", totalmoney = 35};
         }
 
-        SessionController.instance.SessionStarted += SessionStarted;
-        SessionController.instance.SessionEnded += SessionEnded;
+        SessionController.instance.OnSessionStarted += OnSessionStarted;
+        SessionController.instance.OnSessionEnded += OnSessionEnded;
+
         BetsController.instance.OnBetPerformed += BetPerformed;
     }
 
@@ -67,7 +68,7 @@ public class LotteryItem : MonoBehaviour
         
     }
 
-    private void SessionStarted(User user)
+    private void OnSessionStarted(User user)
     {
         if (LoadLotteryOfType == LotteryData.LotteryType.Instant) return;
 
@@ -76,7 +77,7 @@ public class LotteryItem : MonoBehaviour
         StartCoroutine("AuhorizedLotteryDataFetch", fetchRepeatRate);
     }
 
-    private void SessionEnded(User user)
+    private void OnSessionEnded(User user)
     {
         fetchRepeatRate = 3;
         StopCoroutine("AuhorizedLotteryDataFetch");
@@ -182,7 +183,7 @@ public class LotteryItem : MonoBehaviour
     {
         if (data.totalmoney >= 0)
         {
-            LabelTotalValue.text = string.Format("${0:D3}.00", data.totalmoney);
+            LabelTotalValue.text = string.Format("${0}.00", data.totalmoney.ToString("000"));
 
             LabelTotal.cachedGameObject.SetActive(true);
             LabelTotalValue.cachedGameObject.SetActive(true);

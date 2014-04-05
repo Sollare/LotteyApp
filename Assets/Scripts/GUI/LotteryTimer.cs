@@ -28,7 +28,7 @@ public class LotteryTimer : MonoBehaviour
     public UILabel label;
     public bool updateLabel;
     
-    private LotteryData currentLottery;
+    public LotteryData currentLottery;
     private int currentLotteryId;
     
     public const string EmptyTimerString = "00:00:00";
@@ -65,7 +65,7 @@ public class LotteryTimer : MonoBehaviour
 
     IEnumerator EnumeratorStartTimer()
     {
-        while (currentLottery.expiration > 0)
+        while (true)
         {
             resultString = GetFormatString();
 

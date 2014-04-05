@@ -79,7 +79,7 @@ public class LotteryViewController : MonoBehaviour {
 
     public void ShowLotteryDetails()
     {
-        DetailItem.UpdateInfo(CurrentLotteryItem.lotteryInstance);
+        DetailItem.UpdateInfo(LotteryController.instance.Model.GetLottery(CurrentLotteryItem.lotteryInstance.id).Data);
         DetailItem.Show();
 
         ShowLotteryNameInHeader(true);

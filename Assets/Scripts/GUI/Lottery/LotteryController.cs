@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 using System.Collections;
 
@@ -29,7 +30,6 @@ public class LotteryController : MonoBehaviour
     }
 
     private static LotteryController _instance;
-
     public static LotteryController instance
     {
         get

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using LotteyServerApp.Models;
 using UnityEngine;
 using System.Collections;
@@ -7,25 +8,33 @@ public class SessionController : MonoBehaviour
 {
     public delegate void SessionDelegate(User user);
 
-    public event SessionDelegate SessionStarted;
-    public event SessionDelegate SessionEnded;
+    public event SessionDelegate OnSessionStarted;
+    public event SessionDelegate OnSessionEnded;
+    public event SessionDelegate OnUserDataUpdated;
+
+    protected virtual void CallUserInfoUpdated(User user)
+    {
+        //Debug.Log("Информация о пользователе обновлена");
+        SessionDelegate handler = OnUserDataUpdated;
+        if (handler != null) handler(user);
+    }
 
     public static bool isAuthorized;
     public static bool isAttemptingAuthorization;
 
-    protected virtual void OnSessionStarted(User user)
+    protected virtual void CallSessionStarted(User user)
     {
         Debug.Log(">>> СЕССИЯ НАЧАТА <<<");
         isAuthorized = true;
 
-        SessionDelegate handler = SessionStarted;
+        SessionDelegate handler = OnSessionStarted;
         if (handler != null) handler(user);
     }
-    protected virtual void OnSessionEnded(User user)
+    protected virtual void CallSessionEnded(User user)
     {
         isAuthorized = false;
 
-        SessionDelegate handler = SessionEnded;
+        SessionDelegate handler = OnSessionEnded;
         if (handler != null) handler(user);
     }
 
@@ -58,6 +67,18 @@ public class SessionController : MonoBehaviour
     void DelayedLogIn()
     {
         SessionController.instance.SignIn("root", "123456");
+
+        BetsController.instance.OnBetPerformed += BetPerformed;
+    }
+
+    private void BetPerformed(object sender, Bet bet)
+    {
+        var list = currentUser.bets.ToList();
+        list.Add(bet);
+
+        currentUser.bets = list.ToArray();
+
+        CallUserInfoUpdated(currentUser);
     }
 
     public void SignIn(string username, string password)
@@ -73,7 +94,7 @@ public class SessionController : MonoBehaviour
         if (_currentUser != null)
         {
             _currentUser = null;
-            SessionEnded(null);
+            CallSessionEnded(null);
         }
     }
 
@@ -112,8 +133,7 @@ public class SessionController : MonoBehaviour
             UpdateUserData(userId);
         }
     }
-
-
+    
     IEnumerator AuthorizationAttempts(string username, string password)
     {
         int counter = 0;
@@ -157,7 +177,7 @@ public class SessionController : MonoBehaviour
         _currentUser = fetchedObject;
         //Debug.Log(fetchedObject.ToString());
 
-        OnSessionStarted(_currentUser);
+        CallSessionStarted(_currentUser);
     }
 
     #endregion

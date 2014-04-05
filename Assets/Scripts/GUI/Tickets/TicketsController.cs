@@ -66,8 +66,8 @@ public class TicketsController
     {
         if (!Application.isPlaying) return;
 
-        SessionController.instance.SessionStarted += OnSessionStarted;
-        SessionController.instance.SessionEnded += OnSessionEnded;
+        SessionController.instance.OnSessionStarted += OnSessionStarted;
+        SessionController.instance.OnSessionEnded += OnSessionEnded;
 
         BetsController.instance.OnBetPerformed += OnBetPerformed;
 
@@ -82,7 +82,7 @@ public class TicketsController
         if (ticket != null)
         {
             //TicketsController.instance.Model.RemoveTicket(ticket);
-            Debug.Log("Removing ticket " + ticket.id);
+            //Debug.Log("Removing ticket " + ticket.id);
             Model.RemoveTicket(ticket);
         }
     }
@@ -97,6 +97,24 @@ public class TicketsController
     {
         Model = new TicketData(this, user.freeTickets);
         CallTicketsModelLoaded(Model);
+    }
+
+    public void BuyTickets()
+    {
+        WWWOperations.instance.FetchJsonObject<List<Ticket>>(GetUrlStringBuyTickets(SessionController.instance.currentUser),
+            delegate(List<Ticket> fetchedObject, string error)
+            {
+                if (error == null)
+                    TicketsController.instance.Model.AddTickets(fetchedObject);
+                else
+                    Debug.LogWarning(error);
+            });
+    }
+
+
+    private static string GetUrlStringBuyTickets(User user)
+    {
+        return string.Format("{0}/Ticket/Buy/{1}", WWWOperations.instance.ServerUrl, user.id);
     }
 }
 
@@ -160,6 +178,23 @@ public class TicketData
         }
         else
             return false;
+    }
+
+    public bool AddTickets(IEnumerable<Ticket> tickets)
+    {
+        var newTickets = tickets.Where(t => !_tickets.Contains(t));
+        Debug.Log("new tickets: " + newTickets.Count());
+
+        var enumerable = newTickets as Ticket[] ?? newTickets.ToArray();
+
+        if (enumerable.Count() > 0)
+        {
+            _tickets.AddRange(enumerable);
+            _controller.CallTicketsAdded(_tickets);
+            return true;
+        }
+
+        return false;
     }
 
     public Ticket GetTicket(int id)

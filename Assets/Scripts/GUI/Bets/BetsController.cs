@@ -11,6 +11,8 @@ public class BetsController : MonoBehaviour
 
     public virtual void BetPerformed(Bet e)
     {
+        //Debug.Log("BetResponse: " + e.id + " - " + e.ticketId);
+        
         EventHandler<Bet> handler = OnBetPerformed;
         if (handler != null) handler(this, e);
     }
@@ -40,25 +42,22 @@ public class BetsController : MonoBehaviour
 
     private void OnTicketViewActivated(DragDropTicket ticket, LotteryItem item)
     {
-        Debug.Log("Ticket " + ticket.ticketInstance.id + " activated on lottery " + item.lotteryInstance.id);
-        
-        ConfirmPanel.ShowConfirmDialog("Do you want to make a bet on " + item.lotteryInstance.name + "?", 
-        delegate
-        {
-            var mBet = new Bet() { drawingId = item.lotteryInstance.id, id = ticket.ticketInstance.id };
-            var mTicket = ticket.ticketInstance;
-            BetPerformed(new Bet(mBet.id, mTicket.id, mBet.drawingId));
+        //Debug.Log("Ticket " + ticket.ticketInstance.id + " activated on lottery " + item.lotteryInstance.id);
 
-            //PerformBet(ticket.ticketInstance, item.lotteryInstance,
-            //    delegate(ResponseMessage fetchedObject, string error)
-            //    {
-                    
-            //    });
-        },
-            delegate
+        ConfirmPanel.ShowConfirmDialog("Do you want to make a bet on " + item.lotteryInstance.name + "?",
+            () =>
             {
-                ticket.TicketReturned(ticket);
-            });
+                var mBet = new Bet() {drawingId = item.lotteryInstance.id, id = ticket.ticketInstance.id};
+                var mTicket = ticket.ticketInstance;
+                //BetPerformed(new Bet(mBet.id, mTicket.id, mBet.drawingId));
+
+                PerformBet(mTicket, item.lotteryInstance, BetResponse);
+            },
+            () => ticket.TicketReturned(ticket));
+    }
+
+    private void BetResponse(ResponseMessage fetchedObject, string error)
+    {
     }
 
     /// <summary>
@@ -85,7 +84,6 @@ public class BetsController : MonoBehaviour
             }
             else
             {
-                //string[] split = fetchedData.Message.Split('/');
                 var serialziedBet = fetchedData.Message;
                 Bet bet = JsonConvert.DeserializeObject<Bet>(serialziedBet);
 

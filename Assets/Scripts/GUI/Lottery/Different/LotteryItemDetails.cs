@@ -23,6 +23,30 @@ public class LotteryItemDetails : MonoBehaviour
         }
     }
 
+    void Awake()
+    {
+        LotteryController.instance.Model.OnLotteryUpdate += LotteryUpdated;
+        LotteriesScrollView.instance.OnItemChanged += ItemChanged;
+        LotteriesScrollView.instance.OnSelectedItemDataUpdated += SelectedItemDataUpdated;
+    }
+
+    private void SelectedItemDataUpdated(LotteryItem value)
+    {
+        lotteryData = value.lotteryInstance;
+    }
+
+    private void ItemChanged(LotteryItem value)
+    {
+        lotteryData = value.lotteryInstance;
+    }
+
+    private void LotteryUpdated(object sender, Lottery lottery)
+    {
+        if (lotteryData.id == lottery.Data.id)
+        {
+            UpdateInfo(lottery.Data);
+        }
+    }
 
     public void UpdateInfo(LotteryData data)
     {
