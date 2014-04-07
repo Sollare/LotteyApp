@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using UnityEngine;
 using System.Collections;
+using Random = UnityEngine.Random;
 
 public class InstantLotterySlider : UISlider
 {
@@ -19,12 +21,12 @@ public class InstantLotterySlider : UISlider
 
     void Awake()
     {
-        TicketsController.instance.OnTicketViewActivated += TicketActivated;
+        BetsController.instance.OnBetPerformed += OnBetPerformed;
     }
 
-    private void TicketActivated(DragDropTicket ticket, LotteryItem item)
+    private void OnBetPerformed(object sender, Bet bet)
     {
-        if (item.LoadLotteryOfType == LotteryData.LotteryType.Instant)
+        if (bet.id == -1) // У инстант лотереи
         {
             values = new int[3];
 

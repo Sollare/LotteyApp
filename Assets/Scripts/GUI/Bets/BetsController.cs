@@ -47,11 +47,18 @@ public class BetsController : MonoBehaviour
         ConfirmPanel.ShowConfirmDialog("Do you want to make a bet on " + item.lotteryInstance.name + "?",
             () =>
             {
-                var mBet = new Bet() {drawingId = item.lotteryInstance.id, id = ticket.ticketInstance.id};
-                var mTicket = ticket.ticketInstance;
-                //BetPerformed(new Bet(mBet.id, mTicket.id, mBet.drawingId));
+                if (item.lotteryInstance.type != LotteryData.LotteryType.Instant)
+                {
+                    var mBet = new Bet() {drawingId = item.lotteryInstance.id, id = ticket.ticketInstance.id};
+                    var mTicket = ticket.ticketInstance;
+                    //BetPerformed(new Bet(mBet.id, mTicket.id, mBet.drawingId));
 
-                PerformBet(mTicket, item.lotteryInstance, BetResponse);
+                    PerformBet(mTicket, item.lotteryInstance, BetResponse);
+                }
+                else
+                {
+                    BetPerformed(new Bet(-1, ticket.ticketInstance.id, item.lotteryInstance.id));
+                }
             },
             () => ticket.TicketReturned(ticket));
     }

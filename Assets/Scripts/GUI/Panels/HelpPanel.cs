@@ -1,5 +1,4 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class HelpPanel : MonoBehaviour
@@ -30,7 +29,7 @@ public class HelpPanel : MonoBehaviour
 
     public void Show()
     {
-        SetVisible(true);
+        SetVisible(!visible);
     }
 
     public void SetVisible(bool show)
@@ -42,6 +41,11 @@ public class HelpPanel : MonoBehaviour
         
         if (show)
         {
+            gameObject.SetActive(true);
+            panel.alpha = 0f;
+
+            var tweener = TweenAlpha.Begin(gameObject, 0.3f, 1f);
+            tweener.onFinished.Clear();
 
             var firstTicket = grid.FirstTicket;
 
@@ -55,17 +59,9 @@ public class HelpPanel : MonoBehaviour
                 ticketLabel.text = "You have no tickets.\nBuy one!";
                 ticketSilouette.cachedTransform.position = buyTicket.cachedTransform.position;
             }
-
-            gameObject.SetActive(true);
-            panel.alpha = 0f;
-
-            var tweener = TweenAlpha.Begin(gameObject, 0.3f, 1f);
-            tweener.onFinished.Clear();
         }
         else
         {
-            
-
             panel.alpha = 1f;
 
             var tweener = TweenAlpha.Begin(gameObject, 0.3f, 0f);

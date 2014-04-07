@@ -48,7 +48,7 @@ public class LotteryCommonInfoView : MonoBehaviour {
         else
             SetLotteryInfoPanelVisible(true);
 
-        Debug.Log("Item updated");
+        //Debug.Log("Item updated");
         MainLotteryTimer.SetExpirationTime(selectedItem.lotteryInstance.id);
         MainLotteryTimer.StartTimer();
     }
